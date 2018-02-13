@@ -63,7 +63,7 @@
 
     </style>
 
-    <apex:pageBlock title="Device">
+    <apex:pageBlock>
 
         <apex:pageBlockButtons location="top">
             <apex:form >
@@ -72,13 +72,13 @@
                 </apex:actionFunction>
 
                 <apex:outputPanel id="city-selection-block" rendered="{!isShowLocationSelection}">
-                    <apex:outputText value="Devices from: "/>
+                    <apex:outputText style="color: #000;font-size: 1.2em;font-weight:bold;" value="Devices from:"/>
 
-                    <select id="officeLocationsDropDown" onchange="sortDeviceByLocation()">
-                        <option value="all-cities">All cities</option>
-                        <apex:repeat value="{!adminsCities}" var="location">
-                            <option value="{!location.id}">{!location.name}</option>
-                        </apex:repeat>
+                    <select style="color: #000;font-size: 1.2em;" id="officeLocationsDropDown" onchange="sortDeviceByLocation()">
+                            <option value="all-cities">All cities</option>
+                            <apex:repeat value="{!adminsCities}" var="location">
+                                <option value="{!location.id}">{!location.name}</option>
+                            </apex:repeat>
                     </select>
                 </apex:outputPanel>
 
