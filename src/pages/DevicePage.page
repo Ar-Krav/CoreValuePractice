@@ -71,10 +71,10 @@
             </apex:actionFunction>
 
 
-            <apex:outputPanel id="city-selection-block" rendered="{!isAdmin}">
+            <apex:outputPanel id="city-selection-block" rendered="{!isShowLocationSelection}">
                 <select id="officeLocationsDropDown" onchange="sortDeviceByLocation()">
                     <option value="all-cities">All cities</option>
-                    <apex:repeat value="{!officeLocations}" var="location">
+                    <apex:repeat value="{!adminsCities}" var="location">
                         <option value="{!location.id}">{!location.name}</option>
                     </apex:repeat>
                 </select>

@@ -5,6 +5,7 @@
 public with sharing class DevicePageDataModel {
 
     String nameFilterValue, seriaFilterValue, typeFilterValue, ownerFilterValue;
+    List<Location__c> allOfficeLocation;
 
     public void setFilterFields(String nameFilterValue, String ownerFilterValue, String seriaFilterValue, String typeFilterValue){
         this.nameFilterValue = nameFilterValue;
@@ -27,10 +28,12 @@ public with sharing class DevicePageDataModel {
         return ownerFilterValue.equals('') ? ownerFilterValue : ' AND AssignedToEmployee__r.name LIKE \'%' + ownerFilterValue + '%\'';
     }
 
-    private ApexPages.StandardSetController getDevicesFromAllLocations(){
+    private ApexPages.StandardSetController getDevicesFromAllLocations(List<Location__c> locations){
+
         String query = 'SELECT imageUrl__c, Name, AssignedToEmployee__r.name, InvNo__c, RecordType.name'+
                 ' FROM Hardware__c'+
                 ' WHERE Parent__c=null'+
+                ' AND LocationID__c IN :locations' +
                 ' AND name LIKE \'%' + nameFilterValue + '%\'' + getOwnerFilterQuery() +
                 ' AND InvNo__c LIKE \'%' + seriaFilterValue + '%\''+
                 ' AND RecordType.developerName LIKE \'%' + typeFilterValue + '%\''+
@@ -59,7 +62,7 @@ public with sharing class DevicePageDataModel {
     }
 
     public ApexPages.StandardSetController getDevicesStandardSetController(String location){
-        return location.equals('all-cities') ? getDevicesFromAllLocations() : getDevicesByLocation(Id.valueOf(location));
+        return location.equals('all-cities') ? getDevicesFromAllLocations(allOfficeLocation) : getDevicesByLocation(Id.valueOf(location));
     }
 
     public List<HArdware__c> getStockHardware(String recordType, List<Id> selectedHardwaresIds, Hardware__c device){
@@ -89,8 +92,35 @@ public with sharing class DevicePageDataModel {
         WHERE Id = :id];
     }
 
-    public UserPermissions__c getSigndUpUser(String id){
+    public List<UserPermissions__c> getSigndUpUserPermissions(Id id){
         return [SELECT Location__c FROM UserPermissions__c WHERE User__c = :id];
+    }
+
+    public List<Location__c> getLocationUserAdmin(Id id){
+        List<UserPermissions__c> userPermissionsLocations = getSigndUpUserPermissions(id);
+        Boolean isGlobalAdmin = userPermissionsLocations.get(0).Location__c == null;
+        List<Location__c> allLocations = getLocations();
+
+
+        List<Location__c> userLocationAdmin = new List<Location__c>();
+
+        if (isGlobalAdmin) {
+            userLocationAdmin = allLocations;
+        }
+        else {
+            for (Integer i = 0; i < userPermissionsLocations.size(); i++) {
+                Id locationId = userPermissionsLocations.get(i).Location__c;
+
+                for (Location__c location : allLocations) {
+                    if (location.Id.equals(locationId)) {
+                        userLocationAdmin.add(location);
+                    }
+                }
+            }
+        }
+
+        allOfficeLocation = userLocationAdmin;
+        return userLocationAdmin;
     }
 
     public Map<String,Hardware__c> getDeviceConfMap(Id deviceId){

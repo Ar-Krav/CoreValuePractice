@@ -5,15 +5,19 @@
 public with sharing class DevicePageController {
     private DevicePageDataModel deviceModel = new DevicePageDataModel();
 
-    private UserPermissions__c signedUpUser;
+    private List<UserPermissions__c> signedUpUser;
 
 
-    public Boolean isAdmin{
+    public Boolean isShowLocationSelection{
         get;
         set;
     }
 
     public String selectedCity{
+        get;
+        set;
+    }
+    public List<Location__c> adminsCities{
         get;
         set;
     }
@@ -126,11 +130,10 @@ public with sharing class DevicePageController {
     public DevicePageController() {
         deviceModel.setFilterFields(nameFilterValue, ownerFilterValue, seriaFilterValue, typeFilterValue);
 
-        signedUpUser = deviceModel.getSigndUpUser(UserInfo.getUserId());
-        isAdmin = signedUpUser.Location__c == null;
-        selectedCity = isAdmin ? ConstantsUtil.allCityMode : signedUpUser.Location__c;
+        adminsCities = deviceModel.getLocationUserAdmin(UserInfo.getUserId());
 
-        officeLocations = isAdmin ? deviceModel.getLocations() : null;
+        isShowLocationSelection = adminsCities.size() > 1 ? true : false;
+        selectedCity = isShowLocationSelection ? ConstantsUtil.allCityMode : adminsCities.get(0).Id;
     }
 
     public List<Hardware__c> getHardwares(){
