@@ -4,8 +4,7 @@
 
 public with sharing class DevicePageController {
     private DevicePageDataModel deviceModel = new DevicePageDataModel();
-
-    private List<UserPermissions__c> signedUpUser;
+    private String selectedCity;
 
 
     public Boolean isShowLocationSelection{
@@ -13,10 +12,6 @@ public with sharing class DevicePageController {
         set;
     }
 
-    public String selectedCity{
-        get;
-        set;
-    }
     public List<Location__c> adminsCities{
         get;
         set;

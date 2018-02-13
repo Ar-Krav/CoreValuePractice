@@ -65,26 +65,25 @@
 
     <apex:pageBlock title="Device">
 
-        <apex:form >
-            <apex:actionFunction name="changeLocation" action="{!sortDeviceByLocation}" rerender="device-list,configuration-info-block" status="deviceListReadyStatus">
-                <apex:param value="" name="selectedLocation"></apex:param>
-            </apex:actionFunction>
+        <apex:pageBlockButtons location="top">
+            <apex:form >
+                <apex:actionFunction name="changeLocation" action="{!sortDeviceByLocation}" rerender="device-list,configuration-info-block,selected-city-info" status="deviceListReadyStatus">
+                    <apex:param value="" name="selectedLocation"></apex:param>
+                </apex:actionFunction>
 
+                <apex:outputPanel id="city-selection-block" rendered="{!isShowLocationSelection}">
+                    <apex:outputText value="Devices from: "/>
 
-            <apex:outputPanel id="city-selection-block" rendered="{!isShowLocationSelection}">
-                <select id="officeLocationsDropDown" onchange="sortDeviceByLocation()">
-                    <option value="all-cities">All cities</option>
-                    <apex:repeat value="{!adminsCities}" var="location">
-                        <option value="{!location.id}">{!location.name}</option>
-                    </apex:repeat>
-                </select>
-                <br/>
-                <br/>
-            </apex:outputPanel>
+                    <select id="officeLocationsDropDown" onchange="sortDeviceByLocation()">
+                        <option value="all-cities">All cities</option>
+                        <apex:repeat value="{!adminsCities}" var="location">
+                            <option value="{!location.id}">{!location.name}</option>
+                        </apex:repeat>
+                    </select>
+                </apex:outputPanel>
 
-            <br/>
-
-        </apex:form>
+            </apex:form>
+        </apex:pageBlockButtons>
 
         <div id="main-box">
             <div id="device-block">

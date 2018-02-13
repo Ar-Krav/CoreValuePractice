@@ -92,7 +92,7 @@ public with sharing class DevicePageDataModel {
         WHERE Id = :id];
     }
 
-    public List<UserPermissions__c> getSigndUpUserPermissions(Id id){
+    private List<UserPermissions__c> getSigndUpUserPermissions(Id id){
         return [SELECT Location__c FROM UserPermissions__c WHERE User__c = :id];
     }
 
