@@ -103,6 +103,26 @@ public with sharing class DevicePageController {
         set;
     }
 
+    public void first(){
+        deviceConfigurationList = null;
+        this.devicePaginationController.first();
+    }
+
+    public void last(){
+        deviceConfigurationList = null;
+        this.devicePaginationController.last();
+    }
+
+    public void next(){
+        deviceConfigurationList = null;
+        this.devicePaginationController.next();
+    }
+
+    public void previous(){
+        deviceConfigurationList = null;
+        this.devicePaginationController.previous();
+    }
+
     public DevicePageController() {
         deviceModel.setFilterFields(nameFilterValue, ownerFilterValue, seriaFilterValue, typeFilterValue);
 

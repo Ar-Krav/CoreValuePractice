@@ -158,16 +158,16 @@
                             <br/>
 
                             <apex:panelGrid columns="6">
-                                <apex:commandButton status="deviceListReadyStatus" reRender="device-list" value="First" action="{!devicePaginationController.first}" disabled="{!!devicePaginationController.hasPrevious}" title="First Page"/>
-                                <apex:commandButton status="deviceListReadyStatus" reRender="device-list" value="Previous" action="{!devicePaginationController.previous}" disabled="{!!devicePaginationController.hasPrevious}" title="Previous Page"/>
+                                <apex:commandButton reRender="device-list,configuration-info-block" value="First" action="{!first}" disabled="{!!devicePaginationController.hasPrevious}" title="First Page"/>
+                                <apex:commandButton reRender="device-list,configuration-info-block" value="Previous" action="{!previous}" disabled="{!!devicePaginationController.hasPrevious}" title="Previous Page"/>
 
                                 <apex:outputText >
                                         {!devicePaginationController.pageNumber}
                                 </apex:outputText>
 
-                                <apex:commandButton reRender="device-list" value="Next" action="{!devicePaginationController.next}" disabled="{!!devicePaginationController.hasNext}" title="Next Page" />
-                                <apex:commandButton status="deviceListReadyStatus" reRender="device-list" value="Last" action="{!devicePaginationController.last}" disabled="{!!devicePaginationController.hasNext}" title="Last Page"/>
-                                <apex:commandButton reRender="device-list" onClick="searchWithFilter('','','');" value="Reset filters" title="Reset filters"/>
+                                <apex:commandButton reRender="device-list,configuration-info-block" value="Next" action="{!next}" disabled="{!!devicePaginationController.hasNext}" title="Next Page" />
+                                <apex:commandButton reRender="device-list,configuration-info-block" value="Last" action="{!last}" disabled="{!!devicePaginationController.hasNext}" title="Last Page"/>
+                                <apex:commandButton reRender="none" onClick="searchWithFilter('','','');" value="Reset filters" title="Reset filters"/>
                             </apex:panelGrid>
 
                         </apex:outputPanel>
