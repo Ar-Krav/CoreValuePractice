@@ -1,0 +1,144 @@
+<apex:page controller="HardwareController">
+    <apex:form id="changeStatusForm">
+        <apex:pageBlock >
+
+            <apex:includescript value="//code.jquery.com/jquery-1.11.1.min.js"/>
+            <apex:stylesheet value="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"/>
+            <apex:includescript value="//cdn.datatables.net/1.10.16/js/jquery.dataTables.js"/>
+            <apex:includeScript value="{!$Resource.HardwareJS}"/>
+            <apex:stylesheet value="{!$Resource.HardwareCSS}"/>
+
+
+
+
+            <apex:outputPanel styleClass="grey" layout="block">
+                <apex:pageBlockSection title="Account Info" collapsible="false">
+                    <apex:outputText value="{!account.Name}"/><br/>
+                    <apex:outputText value="{!account.Type}"/>
+                </apex:pageBlockSection>
+            </apex:outputPanel>
+
+
+
+            <apex:pageBlockSection title="Hardware" collapsible="false">
+                <apex:outputPanel styleClass="grey" layout="block" rendered="{!If(userWorkStation.Name != null ,true, false)}">
+                    <table id="hardware-table" class="cell-border" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th class="no-sort">Type</th>
+                            <th class="no-sort">Device Name</th>
+                            <th class="no-sort"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <apex:outputText value="{!userWorkStation.RecordType.Name}"/>
+                                </td>
+                                <td>
+                                    <apex:outputText value="{!userWorkStation.Name}"/>
+                                </td>
+                                <td>
+                                <apex:outputLink value="/apex/changepc?accountId={!account.Id}">
+                                    <apex:outputText value="Edit "/>
+                                </apex:outputLink>
+                                        {!$Label.Separator}
+                                    <apex:commandLink action="{!deleteComputer}" value="Del" id="theCommandLink"/>
+                                </td>
+                            </tr>
+                        </tbody>
+
+
+
+                    </table>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            <apex:commandButton value="Add Pc" action="{!insertServerRecord}" disabled="{!userWorkStation.Name != null}"/>
+
+
+            <apex:pageBlockSection title="Current Monitors" collapsible="false">
+                <apex:outputPanel styleClass="grey" layout="block" rendered="{!userMonitors.size > 0}">
+                    <table id="monitor-table" class="cell-border" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th class="no-sort">Monitor Name</th>
+                            <th class="no-sort">Monitor Invo</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <apex:repeat value="{!userMonitors}" var="deviceUnit">
+                            <tr onclick="">
+                                <td>
+                                    <apex:outputText value="{!deviceUnit.Name}"/>
+                                </td>
+                                <td>
+                                    <apex:outputText value="{!deviceUnit.InvNo__c}"/>
+                                </td>
+                                <td>
+
+                                    <apex:outputLink value="/apex/changemonitors?accountId={!account.Id}&deviceId={!deviceUnit.id}">
+                                        <apex:outputText value="Edit"/>
+                                    </apex:outputLink>
+
+                                        {!$Label.Separator}
+
+                                    <apex:commandLink action="{!deleteMonitor}" value="Del" id="theCommandLink" >
+                                        <apex:param value="{!deviceUnit.id}" name="abs" assignTo="{!delMonitorById}"/>
+                                    </apex:commandLink>
+
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                        </tbody>
+                    </table>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+            <apex:commandButton value="Add Monitor" action="{!addMonitor}"/>
+
+
+            <apex:pageBlockSection title="Hardware Info" collapsible="false">
+                <apex:outputPanel styleClass="grey" layout="block">
+                    <table id="devices-table" class="cell-border" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th class="no-sort">OS</th>
+                            <th class="no-sort">MB/SN/Service Tag</th>
+                            <th class="no-sort">CPU</th>
+                            <th class="no-sort">HDD 1 </th>
+                            <th class="no-sort">HDD 2</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <tr onclick="">
+                                <td>
+                                    <apex:outputText value="{!userWorkStation.OS__c}"/>
+                                </td>
+
+                                <td>
+                                    <apex:outputText value="{!userWorkStation.InvNo__c}"/>
+                                </td>
+                                <td>
+                                    <apex:repeat value="{!userPeriphery}"  var="cpu">
+                                        <apex:outputText rendered="{!IF(cpu.RecordType.Name = 'CPU', true, false)}" value="{!cpu.Name}"/>
+                                    </apex:repeat>
+                                </td>
+                                <td>
+
+
+                                    <apex:outputText value="{!firstHDD.Name}"/>
+                                </td>
+                                <td>
+                                    <apex:outputText value="{!secondHDD.Name}"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+
+            <apex:commandButton value="Edit Configuration" action="{!editHardwareConfiguration}"/>
+            <apex:commandButton value="Back" action="{!backToMainPage}"/>
+
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

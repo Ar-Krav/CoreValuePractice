@@ -1,0 +1,96 @@
+<apex:page id="MainInventory" controller="MainInventoryController">
+    <head>
+        <apex:includescript value="//code.jquery.com/jquery-1.11.1.min.js"/>
+        <apex:stylesheet value="{!$Resource.styles}"/>
+        <apex:includescript value="{!$Resource.MainInventory}"/>
+        <link rel="stylesheet" type="text/css"
+              href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"/>
+        <script type="text/javascript" charset="utf8"
+                src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+    </head>
+    <body>
+    <apex:form >
+        <apex:actionFunction action="{!loadHardWareListByLocation}" name="loadHardWareListByLocation"
+                             rerender="tableWrapper,tableTitle" onComplete="setupDataTable()">
+            <apex:param name="location" assignTo="{!currentLocation}" value=""/>
+        </apex:actionFunction>
+
+        <div id="controlPanel">
+            <apex:outputPanel rendered="{!if(admin,true,false)}">
+                <div id="cityDropDown" >
+                    <select id="cityDropDownBlock" class="selectpicker form-control" data-live-search="true">
+                        <option value="All offices">All offices</option>
+                        <apex:repeat value="{!cityes}" var="record">
+                            <option value="{!record}">{!record}</option>
+                            <br/>
+                        </apex:repeat>
+                    </select>
+                </div>
+            </apex:outputPanel>
+            <span id="changeModeButton" class="btn btn-success">Change mode</span>
+        </div>
+
+        <div class="row">
+            <div class="panel panel-primary filterable">
+                <apex:outputPanel id="tableTitle" styleClass="panel-heading">
+                    <h3 class="panel-title">Employee of {!currentLocation}</h3>
+                </apex:outputPanel>
+                <apex:outputPanel id="tableWrapper">
+                    <table id="renderTable" class="display" cellspacing="0" width="100%">
+                        <thead>
+                        <tr class="filters">
+                            <th>{!$ObjectType.HardWare__c.Fields.AssignedToEmployee__c.Label}</th>
+                            <th>{!$ObjectType.HardWare__c.Fields.Name.Label}</th>
+                            <th>Device Type</th>
+                            <th>Monitors</th>
+                            <th class="fulltable">{!$ObjectType.HardWare__c.Fields.LocationID__c.Label}</th>
+                            <th class="fulltable">{!$ObjectType.HardWare__c.Fields.InvNo__c.Label}</th>
+                            <th class="fulltable">Employee Type</th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+
+                        <tr>
+                            <th>{!$ObjectType.HardWare__c.Fields.AssignedToEmployee__c.Label}</th>
+                            <th>{!$ObjectType.HardWare__c.Fields.Name.Label}</th>
+                            <th>Device Type</th>
+                            <th>Monitors</th>
+                            <th class="fulltable">{!$ObjectType.HardWare__c.Fields.LocationID__c.Label}</th>
+                            <th class="fulltable">{!$ObjectType.HardWare__c.Fields.InvNo__c.Label}</th>
+                            <th class="fulltable">Employee Type</th>
+                        </tr>
+                        </tfoot>
+
+                        <tbody>
+                        <apex:repeat value="{!employees}" var="item">
+                            <tr>
+                                <td>
+                                    <apex:outputLink value="/apex/hardware?sfdc.tabName={!tabId}&accountId={!item.empId}">{!item.empName}
+                                    </apex:outputLink>
+                                </td>
+                                <td>
+                                    <apex:outputLink value="/apex/deviceconfigurationeditor?deviceId={!item.deviceId}&sfdc.tabName={!tabId}">{!item.deviceName}
+                                    </apex:outputLink>
+                                </td>
+                                <td>{!item.deviceType}</td>
+                                <td>
+                                    <apex:repeat value="{!item.monitors}" var="record">
+                                        <apex:outputText value="{!record.name} Inv№:"/>
+                                        <apex:outputText value="{!record.InvNo__c}"/>
+                                        <br/>
+                                    </apex:repeat>
+                                </td>
+                                <td class="fulltable">{!item.locationName}</td>
+                                <td class="fulltable">{!item.invNumber}</td>
+                                <td class="fulltable">{!item.empType}</td>
+                            </tr>
+                        </apex:repeat>
+                        </tbody>
+                    </table>
+                </apex:outputPanel>
+            </div>
+        </div>
+
+    </apex:form>
+    </body>
+</apex:page>

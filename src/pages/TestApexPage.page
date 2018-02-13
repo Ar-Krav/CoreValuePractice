@@ -1,0 +1,27 @@
+<!--
+ - Created by Ar-Krav on 24.01.2018.
+ -->
+
+<apex:page controller="DevicePageController" standardStylesheets="false">
+
+    <script>
+        function tesFunc(someVar){
+            alert('here');
+            alert(someVar);
+            alert(someVar.name);
+        }
+    </script>
+
+    <apex:form >
+        <!--<apex:actionFunction name="someTestAction" reRender="rerender-area">
+            <apex:param value="" name="device" assignTo="{!selectedDevice}"/>
+        </apex:actionFunction>-->
+
+        <apex:repeat value="{!deviceList}" var="deviceUnit">
+            <button type="button" onclick="tesFunc('{!deviceUnit.imageUrl__c}');">CLICK + {!deviceUnit.name}</button>
+            <img src="{!deviceUnit.imageUrl__c}"/>
+            <br/>
+        </apex:repeat>
+    </apex:form>
+
+</apex:page>

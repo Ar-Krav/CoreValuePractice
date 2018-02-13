@@ -1,0 +1,74 @@
+<apex:page id="edit-server-record" controller="EditServerRecordController">
+    <apex:stylesheet value="{!$Resource.AddNewServerCSS}"/>
+    <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"/>
+    <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.13/jquery.mask.min.js"/>
+    <apex:includeScript value="{!$Resource.ServerRecordValidation}"/>
+    
+    <apex:form >
+        <apex:pageBlock title="{!$Label.EditServer}" mode="edit" id="edit-server-record-block">
+
+            <apex:pageMessages />
+
+            <apex:pageBlockSection columns="1">
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel />
+                    <apex:outputPanel styleClass="requiredInput" layout="block">
+                        <apex:outputPanel styleClass="requiredBlock" layout="block"/>
+                        <apex:outputLabel styleClass="u-bold-font" value="{!$Label.RequiredFieldAlarm}"/>
+                    </apex:outputpanel>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Hardware__c.Fields.Name.Label}"/>
+                    <apex:selectList styleClass="servers-select-list" value="{!currentServer.Hardware__c}" size="1"
+                                     required="true">
+                        <apex:selectOptions value="{!serversDropDownList}"/>
+                    </apex:selectList>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Server__c.Fields.Name.Label}"/>
+                    <apex:outputPanel styleClass="requiredInput" layout="block">
+                        <apex:outputPanel styleClass="requiredBlock" layout="block"/>
+                        <apex:inputText styleClass="record-input" maxLength="80" value="{!currentServer.Name}" required="true"/>
+                    </apex:outputpanel>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="{!$ObjectType.Server__c.Fields.IP__c.Label}"/>
+                    <apex:outputPanel styleClass="requiredInput" layout="block">
+                        <apex:outputPanel styleClass="requiredBlock" layout="block"/>
+                        <apex:inputText styleClass="ip-address record-input" maxLength="80" value="{!currentServer.IP__c}"
+                                        onChange="editServerIpValidation();" id="ip" required="true"/>
+                    </apex:outputpanel>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel />
+                    <apex:outputLabel styleClass="ip-error-text" value="{!$Label.IncorrectServerIP}"/>
+                </apex:pageBlockSectionItem>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel />
+                    <apex:outputLabel styleClass="ip-error-text" value="{!$Label.IPExample}"/>
+                </apex:pageBlockSectionItem>
+
+                <apex:inputTextarea styleClass="description-input" html-maxlength="255" value="{!currentServer.Description__c}"
+                                    label="{!$ObjectType.Server__c.Fields.Description__c.Label}"/>
+
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel />
+                    <apex:outputPanel styleClass="command-buttons-margin" layout="block">
+                        <apex:commandButton styleClass="add-button" value="{!$Label.SaveLabel}"
+                                            action="{!updateServerRecord}"/>
+                        <apex:outputLink styleClass="btn cancel-button"
+                                         value="/apex/Servers?sfdc.tabName={!serverController.tabId}">{!$Label.CancelLabel}
+                        </apex:outputLink>
+                    </apex:outputPanel>
+                </apex:pageBlockSectionItem>
+
+            </apex:pageBlockSection>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

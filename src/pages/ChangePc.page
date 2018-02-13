@@ -1,0 +1,117 @@
+<apex:page controller="ChangePcController" >
+
+        <apex:includescript value="//code.jquery.com/jquery-1.11.1.min.js"/>
+
+        <link rel="stylesheet" type="text/css"
+          href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"/>
+
+        <script type="text/javascript" charset="utf8"
+            src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+
+        <script>  $(document).ready(function() {
+                  $('#devices-table').DataTable(); });
+        </script>
+
+        <script>
+
+                var lastRow;
+                   function ggg(event, deviceId) {
+                        $("[id$='btn']").prop('disabled', false).removeClass('btnDisabled').addClass('btn');
+                        $("[id$='btn2']").prop('disabled', false).removeClass('btnDisabled').addClass('btn');
+                            if(lastRow != undefined)
+
+                                 lastRow.style.backgroundColor = 'white';
+                                 event.style.backgroundColor = '#e4f3ff';
+                                 lastRow = event;
+                                 showDeviceHardwareData(deviceId);
+                                       };
+         </script>
+
+        <style>
+
+        #device-block, #configuration-info{
+            width:49%;
+            display:inline-block;
+        }
+
+        #main-box{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: stretch;
+        }
+
+
+        #devices-table tfoot{
+            display: table-header-group;
+        }
+
+        #device-block{
+            min-width: 650px;
+        }
+
+        body .bPageBlock .pbBody .pbSubheader{
+            background-color:#c0c0c0;
+        }
+
+        body .bPageBlock .pbBody .pbSubheader h3{
+            color:#000;
+        }
+
+        .bPageBlock .detailList .dataCol{
+            width: 100%;
+        }
+
+        body .bPageBlock .pbBody .labelCol{
+             text-align:left;
+        }
+
+        </style>
+
+    <apex:form id="newForm">
+        <apex:pageBlock >
+                <apex:pageBlockSection title="New Computer" collapsible="false" >
+                    <apex:outputPanel styleClass="grey" layout="block">
+
+                        <apex:actionFunction action="{!setDeviceConfigurationListData}" name="showDeviceHardwareData" rerender="out,configuration-edit-button-block" status="configurationReadyStatus">
+                            <apex:param name="deviceIdParameter" value="" assignTo="{!selectedDeviceId}" />
+                        </apex:actionFunction>
+
+                            <table id="devices-table" class="row-border" cellspacing="0" width="100%">
+                                <thead>
+                                     <tr>
+                                         <th>Device name</th>
+                                         <th>Inventory code</th>
+                                         <th>Device type</th>
+                                     </tr>
+                                </thead>
+
+
+
+                                <tbody>
+                                    <apex:repeat value="{!emptyPc}" var="deviceUnit">
+                                     <tr onclick="ggg(this,'{!deviceUnit.id}')">
+                                        <td>
+                                            <apex:outputText value="{!deviceUnit.name}" />
+                                        </td>
+
+                                        <td>
+                                            <apex:outputText value="{!deviceUnit.InvNo__c}" />
+                                        </td>
+                                        <td>
+                                            <apex:outputText value="{!deviceUnit.RecordType.name}" />
+                                        </td>
+                                     </tr>
+                                    </apex:repeat>
+                                </tbody>
+                            </table>
+                    </apex:outputPanel>
+                </apex:pageBlockSection>
+                    <apex:commandButton value="Add"    rendered="{!userWorkStation.Name == null}"  id="btn2" disabled="{!emptyPc.size = 0 || selectedDeviceId = null}" action="{!addDeviceForUser}" style="width = 1px;"/>
+                    <apex:commandButton value="Update" rendered="{!userWorkStation.Name != null}" id="btn" disabled="{!emptyPc.size = 0 || selectedDeviceId = null}" action="{!updateUserDevice}" style="width = 1px;"/>
+                    <apex:commandButton value="Cancel" action="{!cancelDevice}" style="width = 1px;"/>
+
+        </apex:pageBlock>
+    </apex:form>
+
+</apex:page>

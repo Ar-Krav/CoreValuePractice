@@ -1,0 +1,66 @@
+<apex:page id="servers" controller="ServerController">
+    <apex:stylesheet value="{!$Resource.ServerCSS}"/>
+    <apex:stylesheet value="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"/>
+    <apex:includescript value="//code.jquery.com/jquery-1.11.1.min.js"/>
+    <apex:includeScript value="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"/>
+    <apex:includeScript value="{!$Resource.ServersJS}"/>
+
+    <apex:form id="servers-form">
+        <apex:pageBlock title="{!$Label.Servers} of {!locationLabel}">
+
+            <apex:pageBlockButtons rendered="{!IF(admin,true,false)}" location="top">
+                <apex:outputPanel styleClass="city-selector-label">{!$Label.SelectCity}</apex:outputPanel>
+                <apex:selectList onChange="loadServersListByLocation()" value="{!locationSelector}" size="1">
+                    <apex:selectOptions value="{!locationsDropDownList}"/>
+                </apex:selectList>
+                <apex:actionFunction action="{!changeLocation}" name="loadServersListByLocation"
+                                     reRender="servers-form" onComplete="setupDataTable()">
+                </apex:actionFunction>
+            </apex:pageBlockButtons>
+
+            <apex:pageBlockButtons location="bottom">
+                <apex:commandButton action="{!redirectToAddNewServerPage}" value="{!$Label.AddNewServer}"/>
+            </apex:pageBlockButtons>
+
+            <apex:outputPanel id="servers-table-wrapper">
+                <table id="{!IF(admin,'servers-table', 'servers-table-without-show-entries')}" class="display"
+                       cellspacing="0" width="100%">
+                    <thead>
+                    <tr>
+                        <th class="no-sort"></th>
+                        <th>{!$ObjectType.Server__c.Fields.Name.Label}</th>
+                        <th>{!$ObjectType.Server__c.Fields.IP__c.Label}</th>
+                        <th>{!$ObjectType.Hardware__c.Fields.Name.Label}</th>
+                        <th>{!$ObjectType.Server__c.Fields.Description__c.Label}</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <apex:repeat value="{!serversData}" var="data">
+                        <tr>
+                            <td>
+                                <apex:outputLink value="/apex/EditServerRecord?id={!data.Id}&sfdc.tabName={!tabId}">
+                                        {!$Label.EditLabel}
+                                </apex:outputLink>
+                            </td>
+                            <td>
+                                <apex:outputText value="{!data.Name}"/>
+                            </td>
+                            <td>
+                                <apex:outputText value="{!data.IP__c}"/>
+                            </td>
+                            <td>
+                                <apex:outputLink value="apex/deviceconfigurationeditor?deviceId={!data.Hardware__c}&sfdc.tabName={!tabId}">{!data.Hardware__r.Name}
+                                </apex:outputLink>
+                            </td>
+                            <td>
+                                <apex:outputText value="{!data.Description__c}"/>
+                            </td>
+                        </tr>
+                    </apex:repeat>
+                    </tbody>
+                </table>
+            </apex:outputPanel>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

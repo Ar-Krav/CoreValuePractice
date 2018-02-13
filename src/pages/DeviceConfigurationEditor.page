@@ -1,0 +1,267 @@
+<!--
+ - Created by Ar-Krav on 31.01.2018.
+ -->
+
+<apex:page id="DeviceConfigurationEditor" controller="DeviceConfigurationPageController">
+    <head>
+        <apex:includescript value="//code.jquery.com/jquery-1.11.1.min.js"/>
+        <link rel="stylesheet" type="text/css"
+              href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"/>
+
+        <script type="text/javascript" charset="utf8"
+                src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+
+        <apex:includeScript value="{!$Resource.deviceEditorPageJS}"/>
+    </head>
+
+    <style type="text/css">
+
+        #stock-block{
+            width: 90%;
+            margin: auto;
+        }
+
+        .bPageBlock .pbTitle {
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+
+    <div id="main-block">
+
+        <apex:pageBlock title="{!deviceUnit.name}   |   {!deviceUnit.InvNo__c}   |   {!deviceUnit.AssignedToEmployee__r.name}   |   {!deviceUnit.RecordType.name}">
+
+            <div id="configuration-info">
+                <apex:form >
+                    <apex:actionFunction name="showStock" action="{!getStockData}" reRender="stock-table-section">
+                        <apex:param value="" name="cellRecordType"/>
+                    </apex:actionFunction>
+
+                    <apex:actionFunction name="removeNewConfigHardware" action="{!removeNewConfigHardware}" reRender="stock-table-section,configuration-table-section,action-buttons-section">
+                        <apex:param value="" name="recordType"/>
+                    </apex:actionFunction>
+
+                    <apex:actionFunction name="removeDefaultConfigHardware" action="{!removeDefaultConfigHardware}" reRender="stock-table-section,configuration-table-section,action-buttons-section">
+                        <apex:param value="" name="recordType"/>
+                    </apex:actionFunction>
+
+                    <apex:actionFunction name="restoreDefaultConfigurationHardware" action="{!restoreDefaultConfHardware}" reRender="stock-table-section,configuration-table-section,action-buttons-section">
+                        <apex:param value="" name="recordType"/>
+                    </apex:actionFunction>
+
+                    <apex:outputPanel id="configuration-table-section">
+                        <apex:outputPanel >
+                            <script>
+
+                                if (configurationTable != null){
+                                    configurationTable.destroy();
+                                }
+
+                                configurationTable = redrawConfigurationDataTable();
+                            </script>
+
+                            <table id="configuration-table" class="cell-border">
+                                <thead>
+                                <tr>
+                                    <th style="text-align: center;"><apex:outputText value="Motherboard"/></th>
+                                    <th style="text-align: center;"><apex:outputText value="CPU"/></th>
+                                    <th style="text-align: center;"><apex:outputText value="RAM"/></th>
+                                    <th style="text-align: center;"><apex:outputText value="HDD1"/></th>
+                                    <th style="text-align: center;"><apex:outputText value="HDD2"/></th>
+                                </tr>
+                                </thead>
+
+                                <tfoot>
+                                <tr>
+                                    <th><button type="button" style="width: 100%;" onClick="showStockByRecordType('Motherboard')">Edit</button></th>
+                                    <th><button type="button" style="width: 100%;" onClick="showStockByRecordType('CPU')">Edit</button></th>
+                                    <th><button type="button" style="width: 100%;" onClick="showStockByRecordType('RAM')">Edit</button></th>
+                                    <th><button type="button" style="width: 100%;" onClick="showStockByRecordType('HDD1')">Edit</button></th>
+                                    <th><button type="button" style="width: 100%;" onClick="showStockByRecordType('HDD2')">Edit</button></th>
+                                </tr>
+                                </tfoot>
+
+                                <tbody>
+
+                                <tr>
+                                    <td style="width: 20%;" id="configuration-table-cell-Motherboard">
+                                        <apex:outputPanel rendered="{!currentDeviceConfiguration['Motherboard'].name != null}">
+                                            <apex:outputText value="{!currentDeviceConfiguration['Motherboard'].name}" />
+                                            <button type="button" onClick="removeDefaultConfigHardware('Motherboard')"><img src="{!$Resource.delImage}"/></button>
+                                        </apex:outputPanel>
+
+                                        <apex:outputPanel rendered="{!removedDeviceConfiguration['Motherboard'].name != null}">
+                                            <button title="{!removedDeviceConfiguration['Motherboard'].name}" type="button" onClick="restoreDefaultConfigurationHardware('Motherboard')"><img src="{!$Resource.restoreImage}"/></button>
+                                        </apex:outputPanel>
+                                    </td>
+
+                                    <td style="width: 20%;" id="configuration-table-cell-CPU">
+                                        <apex:outputPanel rendered="{!currentDeviceConfiguration['CPU'].name != null}">
+                                            <apex:outputText value="{!currentDeviceConfiguration['CPU'].name}" />
+                                            <button type="button" onClick="removeDefaultConfigHardware('CPU')"><img src="{!$Resource.delImage}"/></button>
+                                        </apex:outputPanel>
+
+                                        <apex:outputPanel rendered="{!removedDeviceConfiguration['CPU'].name != null}">
+                                            <button title="{!removedDeviceConfiguration['CPU'].name}" type="button" onClick="restoreDefaultConfigurationHardware('CPU')"><img src="{!$Resource.restoreImage}"/></button>
+                                        </apex:outputPanel>
+                                    </td>
+
+                                    <td style="width: 20%;" id="configuration-table-cell-RAM">
+                                        <apex:outputPanel rendered="{!currentDeviceConfiguration['RAM'].name != null}">
+                                            <apex:outputText value="{!currentDeviceConfiguration['RAM'].name}" />
+                                            <button type="button" onClick="removeDefaultConfigHardware('RAM')"><img src="{!$Resource.delImage}"/></button>
+                                        </apex:outputPanel>
+
+                                        <apex:outputPanel rendered="{!removedDeviceConfiguration['RAM'].name != null}">
+                                            <button title="{!removedDeviceConfiguration['RAM'].name}" type="button" onClick="restoreDefaultConfigurationHardware('RAM')"><img src="{!$Resource.restoreImage}"/></button>
+                                        </apex:outputPanel>
+                                    </td>
+
+                                    <td style="width: 20%;" id="configuration-table-cell-HDD1">
+                                        <apex:outputPanel rendered="{!currentDeviceConfiguration['HDD1'].name != null}">
+                                            <apex:outputText value="{!currentDeviceConfiguration['HDD1'].name}" />
+                                            <button type="button" onClick="removeDefaultConfigHardware('HDD1')"><img src="{!$Resource.delImage}"/></button>
+                                        </apex:outputPanel>
+
+                                        <apex:outputPanel rendered="{!removedDeviceConfiguration['HDD1'].name != null}">
+                                            <button title="{!removedDeviceConfiguration['HDD1'].name}" type="button" onClick="restoreDefaultConfigurationHardware('HDD1')"><img src="{!$Resource.restoreImage}"/></button>
+                                        </apex:outputPanel>
+                                    </td>
+
+                                    <td style="width: 20%;" id="configuration-table-cell-HDD2">
+                                        <apex:outputPanel rendered="{!currentDeviceConfiguration['HDD2'].name != null}">
+                                            <apex:outputText value="{!currentDeviceConfiguration['HDD2'].name}" />
+                                            <button type="button" onClick="removeDefaultConfigHardware('HDD2')"><img src="{!$Resource.delImage}"/></button>
+                                        </apex:outputPanel>
+
+                                        <apex:outputPanel rendered="{!removedDeviceConfiguration['HDD2'].name != null}">
+                                            <button title="{!removedDeviceConfiguration['HDD2'].name}" type="button" onClick="restoreDefaultConfigurationHardware('HDD2')"><img src="{!$Resource.restoreImage}"/></button>
+                                        </apex:outputPanel>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <apex:outputPanel rendered="{!newDeviceConfiguration['Motherboard'].name != null}">
+                                            <apex:outputText value="{!newDeviceConfiguration['Motherboard'].name}" />
+                                            <button type="button" onClick="removeNewConfigHardware('Motherboard')"><img src="{!$Resource.delImage}"/></button>
+                                        </apex:outputPanel>
+                                    </td>
+
+                                    <td>
+                                        <apex:outputPanel rendered="{!newDeviceConfiguration['CPU'].name != null}">
+                                            <apex:outputText value="{!newDeviceConfiguration['CPU'].name}" />
+                                            <button type="button" onClick="removeNewConfigHardware('CPU')"><img src="{!$Resource.delImage}"/></button>
+                                        </apex:outputPanel>
+                                    </td>
+
+                                    <td>
+                                        <apex:outputPanel rendered="{!newDeviceConfiguration['RAM'].name != null}">
+                                            <apex:outputText value="{!newDeviceConfiguration['RAM'].name}" />
+                                            <button type="button" onClick="removeNewConfigHardware('RAM')"><img src="{!$Resource.delImage}"/></button>
+                                        </apex:outputPanel>
+                                    </td>
+
+                                    <td>
+                                        <apex:outputPanel rendered="{!newDeviceConfiguration['HDD1'].name != null}">
+                                            <apex:outputText value="{!newDeviceConfiguration['HDD1'].name}" />
+                                            <button type="button" onClick="removeNewConfigHardware('HDD1')"><img src="{!$Resource.delImage}"/></button>
+                                        </apex:outputPanel>
+                                    </td>
+
+                                    <td>
+                                        <apex:outputPanel rendered="{!newDeviceConfiguration['HDD2'].name != null}">
+                                            <apex:outputText value="{!newDeviceConfiguration['HDD2'].name}" />
+                                            <button type="button" onClick="removeNewConfigHardware('HDD2')"><img src="{!$Resource.delImage}"/></button>
+                                        </apex:outputPanel>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </apex:outputPanel>
+                    </apex:outputPanel>
+                </apex:form>
+
+                <br/>
+                <br/>
+
+            </div>
+
+            <div id="stock-block">
+                <apex:form >
+
+                    <apex:actionFunction name="setNewHardwareConf" action="{!setNewDeviceComponent}" reRender="stock-table-section,configuration-table-section,action-buttons-section" >
+                        <apex:param value="" name="hardwareId"/>
+                    </apex:actionFunction>
+
+                    <apex:outputPanel id="stock-table-section">
+                        <apex:outputPanel rendered="{!hardwareListInStock != null}">
+
+                            <script>
+
+                                if (stockTable != null){
+                                    stockTable.destroy();
+                                }
+
+                                stockTable = redrawStockDataTable();
+                            </script>
+
+                            <table id="stock-table" class="row-border" cellspacing="0">
+                                <thead>
+                                <tr>
+                                    <th>Device name</th>
+                                    <th>Inventory code</th>
+                                    <th>in device</th>
+                                    <th>device invNo</th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <apex:repeat value="{!hardwareListInStock}" var="hardwareUnit">
+                                    <tr>
+                                        <td>
+                                            <apex:outputText value="{!hardwareUnit.name}" />
+                                        </td>
+
+                                        <td>
+                                            <apex:outputText value="{!hardwareUnit.InvNo__c}" />
+                                        </td>
+
+                                        <td>
+                                            <apex:outputText value="{!hardwareUnit.Parent__r.name}" />
+                                        </td>
+
+                                        <td>
+                                            <apex:outputText value="{!hardwareUnit.Parent__r.InvNo__c}" />
+                                        </td>
+
+                                        <td>
+                                            <button type="button" onClick="setNewHardwareConf('{!hardwareUnit.id}');" style="width:100%;">Confirm</button>
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                                </tbody>
+                            </table>
+                        </apex:outputPanel>
+
+                        <br/>
+                        <br/>
+                        <br/>
+
+                    </apex:outputPanel>
+                </apex:form>
+            </div>
+
+            <apex:outputPanel id="action-buttons-section">
+                <apex:form >
+                    <apex:panelGrid columns="2">
+                        <apex:commandButton value="CANCEL" action="{!closeEditor}"/>
+                        <apex:commandButton value="SAVE" disabled="{!NOT(isDataToSave)}" action="{!saveNewConfig}"/>
+                    </apex:panelGrid>
+                </apex:form>
+            </apex:outputPanel>
+
+        </apex:pageBlock>
+    </div>
+</apex:page>

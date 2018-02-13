@@ -1,0 +1,236 @@
+<!--
+ - Created by Ar-Krav on 24.01.2018.
+ -->
+
+<apex:page controller="DevicePageController" standardStylesheets="false">
+
+    <head>
+        <apex:includescript value="//code.jquery.com/jquery-1.11.1.min.js"/>
+        <link rel="stylesheet" type="text/css"
+              href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"/>
+
+        <script type="text/javascript" charset="utf8"
+                src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+
+        <apex:includeScript value="{!$Resource.devicePageJS}"/>
+    </head>
+
+    <script>
+        function redrawDeviceDataTable(){
+            return $('#devices-table').DataTable( {
+                "paging":   false,
+                "info":     false
+            } );
+        }
+
+        var deviceTable;
+
+        $(document).ready(function() {
+            deviceTable = redrawDeviceDataTable();
+            configTable = redrawConfigurationDataTable();
+        } );
+
+        var configTable;
+
+        function redrawConfigurationDataTable() {
+            return $('#configuration-table').DataTable( {
+                        "paging":   false,
+                        "info":     false
+                    } );
+        }
+    </script>
+
+    <style>
+        #device-block, #configuration-info{
+            width:49%;
+            display:inline-block;
+        }
+
+        #main-box{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: stretch;
+        }
+
+        #devices-table tfoot{
+            display: table-header-group;
+        }
+
+        #device-block{
+            min-width: 650px;
+        }
+
+    </style>
+
+    <apex:pageBlock title="Device">
+
+        <apex:form >
+            <apex:actionFunction name="changeLocation" action="{!sortDeviceByLocation}" rerender="device-list,configuration-info-block" status="deviceListReadyStatus">
+                <apex:param value="" name="selectedLocation"></apex:param>
+            </apex:actionFunction>
+
+
+            <apex:outputPanel id="city-selection-block" rendered="{!isAdmin}">
+                <select id="officeLocationsDropDown" onchange="sortDeviceByLocation()">
+                    <option value="all-cities">All cities</option>
+                    <apex:repeat value="{!officeLocations}" var="location">
+                        <option value="{!location.id}">{!location.name}</option>
+                    </apex:repeat>
+                </select>
+                <br/>
+                <br/>
+            </apex:outputPanel>
+
+            <br/>
+
+        </apex:form>
+
+        <div id="main-box">
+            <div id="device-block">
+                <apex:form >
+                    <apex:pageBlock title="Assemblies">
+
+                        <apex:actionFunction action="{!setDeviceConfigurationListData}" name="showDeviceHardwareData" rerender="configuration-info-block,configuration-edit-button-block" status="configurationReadyStatus">
+                            <apex:param name="deviceIdParameter" value="" />
+                            <apex:param name="deviceImgUrl" value="" assignTo="{!deviceImageUrl}"/>
+                        </apex:actionFunction>
+
+                        <apex:actionFunction name="alertMonitorChanging" rerender="configuration-info-block,configuration-edit-button-block" action="{!alertMonitorChanging}" onComplete="alert('Only devices can be changed!');"/>
+
+                        <apex:actionFunction action="{!setFilteredDeviceData}" name="searchWithFilter" rerender="device-list,configuration-info-block,configuration-edit-button-block" status="deviceListReadyStatus">
+                            <apex:param name="deviceNameFilter" value="" assignTo="{!nameFilterValue}"/>
+                            <apex:param name="deviceOwnerFilter" value="" assignTo="{!ownerFilterValue}"/>
+                            <apex:param name="deviceSeriaFilter" value="" assignTo="{!seriaFilterValue}"/>
+                            <apex:param name="deviceTypeFilter" value="" assignTo="{!typeFilterValue}"/>
+                        </apex:actionFunction>
+
+                        <apex:outputPanel id="device-list">
+                            <script>
+
+                                if (deviceTable != null){
+                                    deviceTable.destroy();
+                                }
+
+                                deviceTable = redrawDeviceDataTable();
+                            </script>
+
+                            <table id="devices-table" class="row-border" cellspacing="0" width="100%">
+                                <thead>
+                                <tr>
+
+                                    <th><apex:outputText value="{!$ObjectType.Hardware__c.Fields.Name.Label}"/></th>
+                                    <th><apex:outputText value="{!$ObjectType.Hardware__c.Fields.AssignedToEmployee__c.Label}"/></th>
+                                    <th><apex:outputText value="{!$ObjectType.Hardware__c.Fields.InvNo__c.Label}" /></th>
+                                    <th><apex:outputText value="{!$Label.DeviceType}"/></th>
+                                </tr>
+                                </thead>
+
+                                <tfoot>
+                                <tr class="filters">
+                                    <th style="width: 40%"><input style="width: 165px" type="text" id="device-name-filter" value="{!nameFilterValue}" placeholder="Device name" onkeypress="doDeviceFiltration(event)" /></th>
+                                    <th style="width: 20%"><input style="width: 90px" type="text" id="device-owner-filter" value="{!ownerFilterValue}" placeholder="Owner name" onkeypress="doDeviceFiltration(event)" /></th>
+                                    <th style="width: 20%"><input style="width: 90px"   type="text" id="device-seria-filter" value="{!seriaFilterValue}" placeholder="Inventory number" onkeypress="doDeviceFiltration(event)" /></th>
+                                    <th style="width: 20%"><input style="width: 90px" type="text" id="device-type-filter" value="{!typeFilterValue}" placeholder="Device type" onkeypress="doDeviceFiltration(event)" /></th>
+                                </tr>
+                                </tfoot>
+
+                                <tbody>
+                                <apex:repeat value="{!deviceList}" var="deviceUnit">
+                                    <tr onclick="selectRow(this, '{!deviceUnit.RecordType.name}', '{!deviceUnit.id}', '{!deviceUnit.ImageUrl__c}')">
+                                        <td>
+                                            <apex:outputText value="{!deviceUnit.name}" />
+                                        </td>
+                                        <td>
+                                            <apex:outputText value="{!deviceUnit.assignedToEmployee__r.name}" />
+                                        </td>
+                                        <td>
+                                            <apex:outputText value="{!deviceUnit.InvNo__c}" />
+                                        </td>
+                                        <td>
+                                            <apex:outputText value="{!deviceUnit.RecordType.name}" />
+                                        </td>
+                                    </tr>
+                                </apex:repeat>
+                                </tbody>
+                            </table>
+
+                            <br/>
+
+                            <apex:panelGrid columns="6">
+                                <apex:commandButton status="deviceListReadyStatus" reRender="device-list" value="First" action="{!devicePaginationController.first}" disabled="{!!devicePaginationController.hasPrevious}" title="First Page"/>
+                                <apex:commandButton status="deviceListReadyStatus" reRender="device-list" value="Previous" action="{!devicePaginationController.previous}" disabled="{!!devicePaginationController.hasPrevious}" title="Previous Page"/>
+
+                                <apex:outputText >
+                                        {!devicePaginationController.pageNumber}
+                                </apex:outputText>
+
+                                <apex:commandButton reRender="device-list" value="Next" action="{!devicePaginationController.next}" disabled="{!!devicePaginationController.hasNext}" title="Next Page" />
+                                <apex:commandButton status="deviceListReadyStatus" reRender="device-list" value="Last" action="{!devicePaginationController.last}" disabled="{!!devicePaginationController.hasNext}" title="Last Page"/>
+                                <apex:commandButton reRender="device-list" onClick="searchWithFilter('','','');" value="Reset filters" title="Reset filters"/>
+                            </apex:panelGrid>
+
+                        </apex:outputPanel>
+                    </apex:pageBlock>
+                </apex:form>
+            </div>
+
+
+            <div id="configuration-info">
+                <apex:form >
+
+                    <apex:pageBlock title="Configurations" >
+
+                        <apex:pageBlockButtons location="top">
+                            <apex:outputPanel id="configuration-edit-button-block">
+                                <apex:commandButton action="{!redirectToConfigurationEditorPage}" rendered="{!deviceConfigurationList != null}" value="Edit configuration"/>
+                            </apex:outputPanel>
+                        </apex:pageBlockButtons>
+
+                        <apex:outputPanel id="configuration-info-block">
+
+                            <apex:outputPanel rendered="{!deviceConfigurationList != null}">
+
+                                <script>
+                                    if ( configTable != null ) {
+                                        configTable.destroy();
+                                    }
+
+                                    configTable = redrawConfigurationDataTable();
+                                </script>
+
+                                <table id="configuration-table" class="row-border dataTable no-footer">
+                                    <thead>
+                                    <tr>
+                                        <th><apex:outputText value="{!$ObjectType.Hardware__c.Fields.Name.Label}"/></th>
+                                        <th><apex:outputText value="{!$ObjectType.Hardware__c.Fields.InvNo__c.Label}" /></th>
+                                        <th><apex:outputText value="{!$Label.DeviceType}"/></th>
+                                    </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    <apex:repeat value="{!deviceConfigurationList}" var="hardwareUnit">
+                                        <tr>
+                                            <td><apex:outputText value="{!hardwareUnit.name}" /></td>
+                                            <td><apex:outputText value="{!hardwareUnit.InvNo__c}" /></td>
+                                            <td><apex:outputText value="{!hardwareUnit.RecordType.name}" /></td>
+                                        </tr>
+                                    </apex:repeat>
+                                    </tbody>
+                                </table>
+
+                                <br/>
+                                <br/>
+
+                                <img src="{!deviceImageUrl}"/>
+
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+                    </apex:pageBlock>
+                </apex:form>
+            </div>
+        </div>
+
+    </apex:pageBlock>
+
+</apex:page>

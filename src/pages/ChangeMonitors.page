@@ -1,0 +1,58 @@
+<apex:page controller="ChangeMonitorsController">
+
+    <apex:pageMessages />
+    <apex:includescript value="//code.jquery.com/jquery-1.11.1.min.js"/>
+    <apex:stylesheet value="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"/>
+    <apex:includescript value="//cdn.datatables.net/1.10.16/js/jquery.dataTables.js"/>
+    <apex:includeScript value="{!$Resource.HardwareJS}"/>
+    <apex:stylesheet value="{!$Resource.HardwareCSS}"/>
+
+
+    <apex:form id="newForm">
+        <apex:pageBlock >
+
+            <apex:actionFunction action="{!setDeviceConfigurationListData}" name="showDeviceHardwareData" rerender="out,configuration-edit-button-block" status="configurationReadyStatus">
+                <apex:param name="deviceIdParameter" value="" assignTo="{!selectedDeviceId}" />
+            </apex:actionFunction>
+            <apex:pageBlockSection title="Select New Monitors" collapsible="false" >
+                <apex:outputPanel styleClass="grey" layout="block">
+                    <table id="devices-table" class="row-border" cellspacing="0" width="100%">
+                        <thead>
+                        <tr>
+                            <th>Device name</th>
+                            <th>Inventory code</th>
+                            <th>Device type</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <apex:repeat value="{!emptyMonitors}" var="deviceUnit">
+                            <tr onclick="ggg(this,'{!deviceUnit.id}')">
+                                <td>
+                                    <apex:outputText value="{!deviceUnit.name}" />
+                                </td>
+                                <td>
+                                    <apex:outputText value="{!deviceUnit.InvNo__c}" />
+                                </td>
+                                <td>
+                                    <apex:outputText value="{!deviceUnit.RecordType.name}" />
+                                </td>
+                            </tr>
+                        </apex:repeat>
+                        </tbody>
+                    </table>
+                </apex:outputPanel>
+            </apex:pageBlockSection>
+
+
+
+            <apex:commandButton value="Add" rendered="{!monCheck = null}"  disabled="{!emptyMonitors.size = 0 || selectedDeviceId=null}" id="btn" action="{!addNewMonitor}" style="width = 1px;"/>
+            <apex:commandButton value="Update"  rendered="{!monCheck != null}" disabled="{!emptyMonitors.size = 0 || selectedDeviceId=null}" id="btn1" action="{!updateMonitor}" style="width = 1px;"/>
+            <apex:commandButton value="Cancel" action="{!cancelDevice}" style="width = 1px;"/>
+            
+
+
+
+        </apex:pageBlock>
+
+    </apex:form>
+</apex:page>
