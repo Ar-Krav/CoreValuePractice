@@ -12,7 +12,9 @@
         <script type="text/javascript" charset="utf8"
                 src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
 
+
         <apex:includeScript value="{!$Resource.devicePageJS}"/>
+        <link rel="stylesheet" type="text/css" href="{!$Resource.devicePageStyle}"/>
     </head>
 
     <script>
@@ -40,64 +42,6 @@
         }
     </script>
 
-    <style>
-        #device-block, #configuration-info{
-            width:49%;
-            display:inline-block;
-        }
-
-        #main-box{
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: stretch;
-        }
-
-        #device-block{
-            min-width: 634px;
-        }
-
-        #devices-table{
-            table-layout: fixed;
-            width: 100%;
-        }
-
-        #devices-table tfoot{
-            display: table-header-group;
-        }
-
-        #devices-table .table-col-30{
-            width: 30%;
-        }
-
-        #devices-table .table-col-25{
-            width: 25%;
-        }
-
-        #devices-table .table-col-20{
-            width: 20%;
-        }
-
-        p.overlapping-text{
-            width: 100%;
-            margin: 0;
-
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .filter-field{
-            width: 100%;
-            font-size: 90%;
-        }
-
-        .device-table-row{
-            background-color: white;
-        }
-
-    </style>
-
     <apex:pageBlock>
 
         <apex:pageBlockButtons location="top">
@@ -109,7 +53,7 @@
                 <apex:outputPanel id="city-selection-block" rendered="{!isShowLocationSelection}">
                     <apex:outputText style="color: #000;font-size: 1.2em;font-weight:bold;" value="Devices from:"/>
 
-                    <select style="color: #000;font-size: 1.2em;" id="officeLocationsDropDown" onchange="sortDeviceByLocation()">
+                    <select style="color: #000;font-size: 1.1em;" id="officeLocationsDropDown" onchange="sortDeviceByLocation()">
                             <option value="all-cities">All cities</option>
                             <apex:repeat value="{!adminsCities}" var="location">
                                 <option value="{!location.id}">{!location.name}</option>
@@ -170,8 +114,8 @@
 
                                 <tbody>
                                 <apex:repeat value="{!deviceList}" var="deviceUnit">
-                                    <tr class="table-col-30" onclick="selectRow(this, '{!deviceUnit.RecordType.name}', '{!deviceUnit.id}', '{!deviceUnit.ImageUrl__c}')">
-                                        <td class="device-name-col" title="{!deviceUnit.name}">
+                                    <tr style="background-color: white;" onclick="selectRow(this, '{!deviceUnit.RecordType.name}', '{!deviceUnit.id}', '{!deviceUnit.ImageUrl__c}')">
+                                        <td class="table-col-30" title="{!deviceUnit.name}">
                                             <p class="overlapping-text"><apex:outputText value="{!deviceUnit.name}" /></p>
                                         </td>
 
@@ -213,7 +157,7 @@
 
 
             <div id="configuration-info">
-                <apex:form >
+                <apex:form>
                     <apex:outputPanel id="configuration-info-block">
 
                         <apex:pageBlock title="Configurations" >
@@ -234,21 +178,21 @@
                                     configTable = redrawConfigurationDataTable();
                                 </script>
 
-                                <table id="configuration-table" class="row-border dataTable no-footer">
+                                <table id="configuration-table" class="display dataTable no-footer">
                                     <thead>
                                         <tr>
-                                            <th><apex:outputText value="{!$ObjectType.Hardware__c.Fields.Name.Label}"/></th>
-                                            <th><apex:outputText value="{!$ObjectType.Hardware__c.Fields.InvNo__c.Label}" /></th>
-                                            <th><apex:outputText value="{!$Label.DeviceType}"/></th>
+                                            <th class="table-col-40"><apex:outputText value="{!$ObjectType.Hardware__c.Fields.Name.Label}"/></th>
+                                            <th class="table-col-30"><apex:outputText value="{!$ObjectType.Hardware__c.Fields.InvNo__c.Label}" /></th>
+                                            <th class="table-col-30"><apex:outputText value="{!$Label.DeviceType}"/></th>
                                         </tr>
                                     </thead>
 
                                     <tbody>
                                         <apex:repeat value="{!deviceConfigurationList}" var="hardwareUnit">
-                                            <tr>
-                                                <td><apex:outputText value="{!hardwareUnit.name}" /></td>
-                                                <td><apex:outputText value="{!hardwareUnit.InvNo__c}" /></td>
-                                                <td><apex:outputText value="{!hardwareUnit.RecordType.name}" /></td>
+                                            <tr style="background-color: white;" class="table-row">
+                                                <td class="table-col-40" title="{!hardwareUnit.name}"><p class="overlapping-text"><apex:outputText value="{!hardwareUnit.name}"/></p></td>
+                                                <td class="table-col-30" title="{!hardwareUnit.InvNo__c}"><p class="overlapping-text"><apex:outputText value="{!hardwareUnit.InvNo__c}"/></p></td>
+                                                <td class="table-col-30" title="{!hardwareUnit.RecordType.name}"><p class="overlapping-text"><apex:outputText value="{!hardwareUnit.RecordType.name}"/></p></td>
                                             </tr>
                                         </apex:repeat>
                                     </tbody>
