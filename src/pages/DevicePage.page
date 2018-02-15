@@ -43,7 +43,7 @@
     </script>
 
     <style>
-        .paginate_button.current{
+        .paginate-button.current{
             color:#333 !important;
             border:1px solid #979797;
             background-color:white;
@@ -53,7 +53,7 @@
             background:linear-gradient(to bottom, #fff 0%, #dcdcdc 100%)
         }
 
-        .paginate_button.current:hover{
+        .paginate-button.current:hover{
             color:#333 !important;
             border:1px solid #979797;
             background-color:white;
@@ -65,7 +65,7 @@
             background:linear-gradient(to bottom, #fff 0%, #dcdcdc 100%) !important;
         }
 
-        .paginate_button{
+        .paginate-button{
             box-sizing: border-box;
             display: inline-block;
             min-width: 1.5em;
@@ -73,13 +73,14 @@
             margin-left: 2px;
             text-align: center;
             cursor: pointer;
-            color: #333;
+            color: #333 !important;
+            background-color: transparent;
             text-decoration: none !important;
             border: 1px solid transparent;
             border-radius: 2px;
         }
 
-        .paginate_button:active{
+        .paginate-button:active{
             outline:none;
             background-color:#2b2b2b;
             background:-webkit-gradient(linear, left top, left bottom, color-stop(0%, #2b2b2b), color-stop(100%, #0c0c0c));
@@ -91,7 +92,7 @@
             box-shadow:inset 0 0 3px #111;
         }
 
-        .paginate_button:hover{
+        .paginate-button:hover{
             color:white !important;
             border:1px solid #111;
             background-color:#585858;
@@ -99,6 +100,14 @@
             background:-webkit-linear-gradient(top, #585858 0%, #111 100%);background:-moz-linear-gradient(top, #585858 0%, #111 100%);
             background:-ms-linear-gradient(top, #585858 0%, #111 100%);background:-o-linear-gradient(top, #585858 0%, #111 100%);
             background:linear-gradient(to bottom, #585858 0%, #111 100%)
+        }
+
+        .paginate-button.disabled,.paginate-button.disabled:hover,.paginate-button.disabled:active{
+            cursor:default;
+            color:#666 !important;
+            border:1px solid transparent;
+            background:transparent;
+            box-shadow:none
         }
     </style>
 
@@ -198,14 +207,18 @@
                             <br/>
 
                             <apex:panelGrid columns="6">
-                                <apex:commandButton reRender="device-list,configuration-info-block" value="First" action="{!first}" disabled="{!!devicePaginationController.hasPrevious}" title="First Page"/>
-                                <apex:commandButton reRender="device-list,configuration-info-block" value="Previous" action="{!previous}" disabled="{!!devicePaginationController.hasPrevious}" title="Previous Page"/>
+                                <input type="button" class="paginate-button {!IF(devicePaginationController.hasPrevious,'','disabled')}" disabled="{!!devicePaginationController.hasPrevious}" value="Previous"/>
+                                <input type="button" class="paginate-button current" value="1"/>
 
-                                <a class="paginate_button current">{!devicePaginationController.pageNumber}</a>
+<!--                                <apex:commandButton reRender="device-list,configuration-info-block" value="First" action="{!first}" disabled="{!!devicePaginationController.hasPrevious}" title="First Page"/>
+                                <apex:commandButton reRender="device-list,configuration-info-block" value="Previous" action="{!previous}" disabled="{!!devicePaginationController.hasPrevious}" title="Previous Page"/>-->
 
-                                <apex:commandButton reRender="device-list,configuration-info-block" value="Next" action="{!next}" disabled="{!!devicePaginationController.hasNext}" title="Next Page" />
-                                <apex:commandButton styleClass="paginate_button" reRender="device-list,configuration-info-block" value="Last" action="{!last}" disabled="{!!devicePaginationController.hasNext}" title="Last Page"/>
-                                <a class="paginate_button">Next</a>
+                                <!--<a class="paginate-button current">{!devicePaginationController.pageNumber}</a>-->
+
+                               <!-- <apex:commandButton reRender="device-list,configuration-info-block" value="Next" action="{!next}" disabled="{!!devicePaginationController.hasNext}" title="Next Page" />
+                                <apex:commandButton reRender="device-list,configuration-info-block" value="Last" action="{!last}" disabled="{!!devicePaginationController.hasNext}" title="Last Page"/>-->
+
+                                <input type="button" value="Next" class="paginate-button {!IF(devicePaginationController.hasNext,'','disabled')}" disabled="{!!devicePaginationController.hasNext}"/>
                                 <apex:commandButton reRender="none" onClick="searchWithFilter('','','');" value="Reset filters" title="Reset filters"/>
                             </apex:panelGrid>
 
