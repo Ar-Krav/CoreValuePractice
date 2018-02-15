@@ -102,6 +102,11 @@ public with sharing class DevicePageController {
         set;
     }
 
+    public Integer totalPagesNum{
+        get;
+        set;
+    }
+
     public void first(){
         deviceConfigurationList = null;
         this.devicePaginationController.first();
@@ -129,6 +134,11 @@ public with sharing class DevicePageController {
 
         isShowLocationSelection = adminsCities.size() > 1 ? true : false;
         selectedCity = isShowLocationSelection ? ConstantsUtil.allCityMode : adminsCities.get(0).Id;
+
+        totalPagesNum = (Integer) Math.ceil((Decimal)devicePaginationController.getResultSize() / ConstantsUtil.itemsOnOnePaginationPage);
+
+        System.debug('totalPages: ' + totalPagesNum);
+        System.debug('current: ' + devicePaginationController.getPageNumber());
     }
 
     public List<Hardware__c> getHardwares(){

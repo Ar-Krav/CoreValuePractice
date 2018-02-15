@@ -30,6 +30,7 @@
         $(document).ready(function() {
             deviceTable = redrawDeviceDataTable();
             configTable = redrawConfigurationDataTable();
+            pageButtonClick();
         } );
 
         var configTable;
@@ -111,6 +112,47 @@
         }
     </style>
 
+    <script>
+        function pageButtonClick() {
+            var totalPages = {!totalPagesNum};
+            var currentPage = {!devicePaginationController.pageNumber};
+
+            var buttonsBlock = document.getElementById('page-buttons-block');
+            var lastButtonBlock = document.getElementById('last-page-button-block');
+
+            var htmlCode='';
+
+            if (totalPages > 1 && totalPages <= 6){
+                for(var i = 2; i <= totalPages; i++){
+                    htmlCode += '<input type="button" class="paginate-button" data-page="' + i + '" value="' + i + '"/>\n';
+                }
+
+                buttonsBlock.innerHTML = htmlCode;
+                return;
+            }
+
+
+            if (totalPages > 0){
+                htmlCode = '<input type="button" class="paginate-button" data-page="' + totalPages + '" value="' + totalPages + '"/>';
+                lastButtonBlock.innerHTML = htmlCode;
+            }
+
+            buttonsBlock.parentNode.removeChild(buttonsBlock);
+
+            if (currentPage >= 5 && totalPages - currentPage > 5){
+                htmlCode = '...';
+
+                htmlCode += '<input type="button" class="paginate-button" data-page="' + (currentPage - 1) + '" value="' + (currentPage - 1) + '"/>';
+                htmlCode += '<input type="button" class="paginate-button" data-page="' + currentPage + '" value="' + currentPage + '"/>';
+                htmlCode += '<input type="button" class="paginate-button" data-page="' + (currentPage + 1) + '" value="' + (currentPage + 1) + '"/>';
+
+                htmlCode += '...';
+
+                buttonsBlock.innerHTML = htmlCode;
+            }
+        }
+    </script>
+
     <apex:pageBlock>
 
         <apex:pageBlockButtons location="top">
@@ -151,6 +193,11 @@
                             <apex:param name="deviceSeriaFilter" value="" assignTo="{!seriaFilterValue}"/>
                             <apex:param name="deviceTypeFilter" value="" assignTo="{!typeFilterValue}"/>
                         </apex:actionFunction>
+
+                        <apex:actionFunction name="previousPage" action="{!previous}"/>
+                        <apex:actionFunction name="nextPage" action="{!next}"/>
+                        <apex:actionFunction name="firstPage" action="{!first}"/>
+                        <apex:actionFunction name="lastPage" action="{!last}"/>
 
                         <apex:outputPanel id="device-list">
                             <script>
@@ -209,6 +256,9 @@
                             <apex:panelGrid columns="6">
                                 <input type="button" class="paginate-button {!IF(devicePaginationController.hasPrevious,'','disabled')}" disabled="{!!devicePaginationController.hasPrevious}" value="Previous"/>
                                 <input type="button" class="paginate-button current" value="1"/>
+
+                                <div id="page-buttons-block"></div>
+                                <div id="last-page-button-block"></div>
 
 <!--                                <apex:commandButton reRender="device-list,configuration-info-block" value="First" action="{!first}" disabled="{!!devicePaginationController.hasPrevious}" title="First Page"/>
                                 <apex:commandButton reRender="device-list,configuration-info-block" value="Previous" action="{!previous}" disabled="{!!devicePaginationController.hasPrevious}" title="Previous Page"/>-->
