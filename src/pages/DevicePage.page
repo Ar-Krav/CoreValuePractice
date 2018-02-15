@@ -44,6 +44,10 @@
     </script>
 
     <style>
+        .ellipsis{
+            padding:0 1em;
+        }
+
         .paginate-button.current{
             color:#333 !important;
             border:1px solid #979797;
@@ -137,19 +141,49 @@
                 lastButtonBlock.innerHTML = htmlCode;
             }
 
-            buttonsBlock.parentNode.removeChild(buttonsBlock);
+            htmlCode='';
+            buttonsBlock.innerHTML = htmlCode;
 
-            if (currentPage >= 5 && totalPages - currentPage > 5){
-                htmlCode = '...';
+            if(currentPage < 5){
+                for(i = 2; i <= 5; i++){
+                    if(i == currentPage){
+                        htmlCode += '<input type="button" class="paginate-button current" data-page="' + i + '" value="' + i + '"/>\n';
+                    }
+                    else {
+                        htmlCode += '<input type="button" class="paginate-button" data-page="' + i + '" value="' + i + '"/>\n';
+                    }
+                }
 
-                htmlCode += '<input type="button" class="paginate-button" data-page="' + (currentPage - 1) + '" value="' + (currentPage - 1) + '"/>';
-                htmlCode += '<input type="button" class="paginate-button" data-page="' + currentPage + '" value="' + currentPage + '"/>';
-                htmlCode += '<input type="button" class="paginate-button" data-page="' + (currentPage + 1) + '" value="' + (currentPage + 1) + '"/>';
-
-                htmlCode += '...';
-
-                buttonsBlock.innerHTML = htmlCode;
+                htmlCode += '<span class="ellipsis">…</span>';
             }
+            else {
+                if (totalPages - currentPage < 5){
+
+                    htmlCode = '<span class="ellipsis">…</span>';
+
+                    for(i = totalPages - currentPage; i <= totalPages; i++){
+                        if(i == currentPage){
+                            htmlCode += '<input type="button" class="paginate-button current" data-page="' + i + '" value="' + i + '"/>\n';
+                        }
+                        else {
+                            htmlCode += '<input type="button" class="paginate-button" data-page="' + i + '" value="' + i + '"/>\n';
+                        }
+                    }
+                }
+                else {
+                    htmlCode = '<span class="ellipsis">…</span>';
+
+                    htmlCode += '<input type="button" class="paginate-button" data-page="' + (currentPage - 1) + '" value="' + (currentPage - 1) + '"/>';
+                    htmlCode += '<input type="button" class="paginate-button current" data-page="' + currentPage + '" value="' + currentPage + '"/>';
+                    htmlCode += '<input type="button" class="paginate-button" data-page="' + (currentPage + 1) + '" value="' + (currentPage + 1) + '"/>';
+
+                    htmlCode += '<span class="ellipsis">…</span>';
+                }
+            }
+
+            buttonsBlock.innerHTML = htmlCode;
+
+            console.log('htmlDoC: ' + htmlCode);
         }
     </script>
 
@@ -257,8 +291,8 @@
                                 <input type="button" class="paginate-button {!IF(devicePaginationController.hasPrevious,'','disabled')}" disabled="{!!devicePaginationController.hasPrevious}" value="Previous"/>
                                 <input type="button" class="paginate-button current" value="1"/>
 
-                                <div id="page-buttons-block"></div>
-                                <div id="last-page-button-block"></div>
+                                <div style="display:inline-block" id="page-buttons-block"></div>
+                                <div style="display:inline-block" id="last-page-button-block"></div>
 
 <!--                                <apex:commandButton reRender="device-list,configuration-info-block" value="First" action="{!first}" disabled="{!!devicePaginationController.hasPrevious}" title="First Page"/>
                                 <apex:commandButton reRender="device-list,configuration-info-block" value="Previous" action="{!previous}" disabled="{!!devicePaginationController.hasPrevious}" title="Previous Page"/>-->
