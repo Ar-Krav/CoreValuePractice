@@ -126,7 +126,7 @@
 
     <script>
         function pageButtonClick() {
-            var htmlCode = '<button type="button" onClick="searchWithFilter(\'\',\'\',\'\');">RESET FILTERS</button>';
+            var htmlCode = '<button class="paginate-button current" type="button" onClick="searchWithFilter(\'\',\'\',\'\');">RESET FILTERS</button>';
             document.getElementById('devices-table_wrapper').insertAdjacentHTML('afterBegin',htmlCode);
 
             var buttonsBlock = document.getElementById('page-buttons-block');
@@ -136,6 +136,8 @@
             console.log('currentPage: ' + {!devicePaginationController.pageNumber});
 
             var htmlCode='';
+
+            currentPage == 1 && document.getElementById('first-page-button').classList.add('current');
 
             if (totalPages <= 6){
                 for(var i = 2; i <= totalPages; i++){
@@ -150,6 +152,7 @@
             if (totalPages > 0){
                 htmlCode = '<input id="last-page-button" type="button" class="paginate-button" data-page="' + totalPages + '" value="' + totalPages + '" onclick="lastPage()"/>';
                 lastButtonBlock.innerHTML = htmlCode;
+                currentPage == totalPages && document.getElementById('last-page-button').classList.add('current');
             }
 
             htmlCode='';
@@ -251,8 +254,8 @@
 
                         <apex:actionFunction name="previousPage" action="{!previous}" reRender="device-list,configuration-info-block"/>
                         <apex:actionFunction name="nextPage" action="{!next}" reRender="device-list,configuration-info-block"/>
-                        <apex:actionFunction name="firstPage" action="{!first}" reRender="device-list,configuration-info-block" onComplete="document.getElementById('first-page-button').classList.add('current');"/>
-                        <apex:actionFunction name="lastPage" action="{!last}" reRender="device-list,configuration-info-block" onComplete="document.getElementById('last-page-button').classList.add('current');"/>
+                        <apex:actionFunction name="firstPage" action="{!first}" reRender="device-list,configuration-info-block"/>
+                        <apex:actionFunction name="lastPage" action="{!last}" reRender="device-list,configuration-info-block"/>
 
                         <apex:actionFunction name="goToSelectedPageNum" action="{!goToSelectedPage}" reRender="device-list,configuration-info-block">
                             <apex:param value="" name="selectedPage"/>
