@@ -1,3 +1,7 @@
+#pagination-buttons-block{
+    text-align: right;
+}
+
 #device-block, #configuration-info{
             width:49%;
             display:inline-block;

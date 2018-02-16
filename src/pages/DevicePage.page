@@ -303,7 +303,7 @@
 
                             <br/>
 
-                            <apex:panelGrid columns="6">
+                            <div id="pagination-buttons-block">
                                 <input type="button" class="paginate-button {!IF(devicePaginationController.hasPrevious,'','disabled')}" value="Previous" onclick="previousPage()"/>
                                 <input id="first-page-button" type="button" class="paginate-button" value="1"/>
 
@@ -311,7 +311,7 @@
                                 <div style="display:inline-block" id="last-page-button-block"></div>
 
                                 <input type="button" value="Next" class="paginate-button {!IF(devicePaginationController.hasNext,'','disabled')}" onclick="nextPage()"/>
-                            </apex:panelGrid>
+                            </div>
 
                         </apex:outputPanel>
                     </apex:pageBlock>
