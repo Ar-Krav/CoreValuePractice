@@ -167,7 +167,7 @@
                 htmlCode += '<span class="ellipsis">…</span>';
             }
             else {
-                if (totalPages - currentPage < 5){
+                if (totalPages - currentPage < 5 && totalPages - currentPage != 4){
 
                     console.log('PageMinus: ' + totalPages - currentPage);
 
@@ -180,9 +180,9 @@
                 else {
                     htmlCode = '<span class="ellipsis">…</span>';
 
-                    htmlCode += '<input type="button" class="paginate-button" data-page="' + (currentPage - 1) + '" value="' + (currentPage - 1) + '"/>';
+                    htmlCode += '<input type="button" class="paginate-button" data-page="' + (currentPage - 1) + '" value="' + (currentPage - 1) + '" onclick="goToPage(this)"/>';
                     htmlCode += '<input type="button" class="paginate-button current" data-page="' + currentPage + '" value="' + currentPage + '"/>';
-                    htmlCode += '<input type="button" class="paginate-button" data-page="' + (currentPage + 1) + '" value="' + (currentPage + 1) + '"/>';
+                    htmlCode += '<input type="button" class="paginate-button" data-page="' + (currentPage + 1) + '" value="' + (currentPage + 1) + '" onclick="goToPage(this)"/>';
 
                     htmlCode += '<span class="ellipsis">…</span>';
                 }
@@ -197,7 +197,7 @@
             var htmlCode='';
 
             if(i == currentPage){
-                htmlCode += '<input type="button" class="paginate-button current" data-page="' + i + '" value="' + i + '" onclick="goToPage(this)"/>\n';
+                htmlCode += '<input type="button" class="paginate-button current" data-page="' + i + '" value="' + i + '"/>\n';
             }
             else {
                 htmlCode += '<input type="button" class="paginate-button" data-page="' + i + '" value="' + i + '" onclick="goToPage(this)"/>\n';
