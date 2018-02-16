@@ -118,6 +118,10 @@
 
     <script>
         function pageButtonClick() {
+            var htmlCode = '<button type="button" onClick="searchWithFilter(\'\',\'\',\'\');">RESET FILTERS</button>';
+            document.getElementById('devices-table_wrapper').insertAdjacentHTML('afterBegin',htmlCode);
+
+
             var totalPages = {!totalPagesNum};
             var currentPage = {!devicePaginationController.pageNumber};
 
@@ -128,7 +132,7 @@
 
             if (totalPages > 1 && totalPages <= 6){
                 for(var i = 2; i <= totalPages; i++){
-                    htmlCode += '<input type="button" class="paginate-button" data-page="' + i + '" value="' + i + '"/>\n';
+                    htmlCode += checkNeccessaryHTMLCode(i, currentPage);
                 }
 
                 buttonsBlock.innerHTML = htmlCode;
@@ -146,12 +150,7 @@
 
             if(currentPage < 5){
                 for(i = 2; i <= 5; i++){
-                    if(i == currentPage){
-                        htmlCode += '<input type="button" class="paginate-button current" data-page="' + i + '" value="' + i + '"/>\n';
-                    }
-                    else {
-                        htmlCode += '<input type="button" class="paginate-button" data-page="' + i + '" value="' + i + '"/>\n';
-                    }
+                    htmlCode += checkNeccessaryHTMLCode(i, currentPage);
                 }
 
                 htmlCode += '<span class="ellipsis">…</span>';
@@ -162,12 +161,7 @@
                     htmlCode = '<span class="ellipsis">…</span>';
 
                     for(i = totalPages - currentPage; i <= totalPages; i++){
-                        if(i == currentPage){
-                            htmlCode += '<input type="button" class="paginate-button current" data-page="' + i + '" value="' + i + '"/>\n';
-                        }
-                        else {
-                            htmlCode += '<input type="button" class="paginate-button" data-page="' + i + '" value="' + i + '"/>\n';
-                        }
+                        htmlCode += checkNeccessaryHTMLCode(i, currentPage);
                     }
                 }
                 else {
@@ -184,6 +178,19 @@
             buttonsBlock.innerHTML = htmlCode;
 
             console.log('htmlDoC: ' + htmlCode);
+        }
+
+        function checkNeccessaryHTMLCode(i, currentPage) {
+            var htmlCode='';
+
+            if(i == currentPage){
+                htmlCode += '<input type="button" class="paginate-button current" data-page="' + i + '" value="' + i + '"/>\n';
+            }
+            else {
+                htmlCode += '<input type="button" class="paginate-button" data-page="' + i + '" value="' + i + '"/>\n';
+            }
+
+            return htmlCode;
         }
     </script>
 
@@ -228,10 +235,10 @@
                             <apex:param name="deviceTypeFilter" value="" assignTo="{!typeFilterValue}"/>
                         </apex:actionFunction>
 
-                        <apex:actionFunction name="previousPage" action="{!previous}"/>
-                        <apex:actionFunction name="nextPage" action="{!next}"/>
-                        <apex:actionFunction name="firstPage" action="{!first}"/>
-                        <apex:actionFunction name="lastPage" action="{!last}"/>
+                        <apex:actionFunction name="previousPage" action="{!previous}" reRender="device-list,configuration-info-block" onComplete="pageButtonClick()"/>
+                        <apex:actionFunction name="nextPage" action="{!next}" reRender="device-list,configuration-info-block" onComplete="pageButtonClick()"/>
+                        <apex:actionFunction name="firstPage" action="{!first}" reRender="device-list,configuration-info-block" onComplete="pageButtonClick()"/>
+                        <apex:actionFunction name="lastPage" action="{!last}" reRender="device-list,configuration-info-block" onComplete="pageButtonClick()"/>
 
                         <apex:outputPanel id="device-list">
                             <script>
@@ -241,6 +248,7 @@
                                 }
 
                                 deviceTable = redrawDeviceDataTable();
+                                pageButtonClick();
                             </script>
 
                             <table id="devices-table" class="display" cellspacing="0">
@@ -288,22 +296,13 @@
                             <br/>
 
                             <apex:panelGrid columns="6">
-                                <input type="button" class="paginate-button {!IF(devicePaginationController.hasPrevious,'','disabled')}" disabled="{!!devicePaginationController.hasPrevious}" value="Previous"/>
+                                <input type="button" class="paginate-button {!IF(devicePaginationController.hasPrevious,'','disabled')}" value="Previous" disabled="true" onclick="previousPage()"/>
                                 <input type="button" class="paginate-button current" value="1"/>
 
                                 <div style="display:inline-block" id="page-buttons-block"></div>
                                 <div style="display:inline-block" id="last-page-button-block"></div>
 
-<!--                                <apex:commandButton reRender="device-list,configuration-info-block" value="First" action="{!first}" disabled="{!!devicePaginationController.hasPrevious}" title="First Page"/>
-                                <apex:commandButton reRender="device-list,configuration-info-block" value="Previous" action="{!previous}" disabled="{!!devicePaginationController.hasPrevious}" title="Previous Page"/>-->
-
-                                <!--<a class="paginate-button current">{!devicePaginationController.pageNumber}</a>-->
-
-                               <!-- <apex:commandButton reRender="device-list,configuration-info-block" value="Next" action="{!next}" disabled="{!!devicePaginationController.hasNext}" title="Next Page" />
-                                <apex:commandButton reRender="device-list,configuration-info-block" value="Last" action="{!last}" disabled="{!!devicePaginationController.hasNext}" title="Last Page"/>-->
-
-                                <input type="button" value="Next" class="paginate-button {!IF(devicePaginationController.hasNext,'','disabled')}" disabled="{!!devicePaginationController.hasNext}"/>
-                                <apex:commandButton reRender="none" onClick="searchWithFilter('','','');" value="Reset filters" title="Reset filters"/>
+                                <input type="button" value="Next" class="paginate-button {!IF(devicePaginationController.hasNext,'','disabled')}" onclick="nextPage()"/>
                             </apex:panelGrid>
 
                         </apex:outputPanel>
