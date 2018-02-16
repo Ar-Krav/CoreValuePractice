@@ -131,6 +131,11 @@ public with sharing class DevicePageController {
         this.devicePaginationController.previous();
     }
 
+    public void goToSelectedPage(){
+        Integer selectedPageNum = Integer.valueOf(ApexPages.currentPage().getParameters().get('selectedPage'));
+        devicePaginationController.setPageNumber(selectedPageNum);
+    }
+
     public DevicePageController() {
         deviceModel.setFilterFields(nameFilterValue, ownerFilterValue, seriaFilterValue, typeFilterValue);
 

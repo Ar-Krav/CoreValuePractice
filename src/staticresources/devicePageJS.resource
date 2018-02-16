@@ -19,28 +19,14 @@
 
         }
 
-        var lastSelectedRow;
-        function markSelectedRow(element){
-            if (lastSelectedRow != undefined){
-                lastSelectedRow.style.backgroundColor = 'white';
-            }
-
-            element.style.backgroundColor = '#e4f3ff';
-            lastSelectedRow = element;
-        }
-
-        function selectRow(element, recordType, deviceId, deviceImgUrl) {
-
-console.log('IN JS: ' + deviceImgUrl);
+        function selectRow(recordType, deviceId, deviceImgUrl) {
 
             var availableToChangeHardware = ['PC', 'Notebook', 'Server'];
 
             if (availableToChangeHardware.includes(recordType)){
-                markSelectedRow(element);
                 showDeviceHardwareData(deviceId, deviceImgUrl);
             }
             else {
-                markSelectedRow(element);
                 alertMonitorChanging();
             }
         }

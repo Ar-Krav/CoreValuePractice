@@ -4,7 +4,7 @@
 
 public with sharing class ConstantsUtil {
     public static final String allCityMode = 'all-cities';
-    public static final Integer itemsOnOnePaginationPage = 4;
+    public static final Integer itemsOnOnePaginationPage = 10;
 
     public static final String TAB_TAG_PREFIX = 'sfdc.tabName';
     public static final String DEVICES_TAB_TAG = '01r1N000001NKig';

@@ -10,16 +10,10 @@
               href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"/>
 
         <link rel="stylesheet" type="text/css"
-              href="https://cdn.datatables.net/buttons/1.5.1/css/buttons.dataTables.min.css"/>
-
-        <link rel="stylesheet" type="text/css"
               href="https://cdn.datatables.net/select/1.2.5/css/select.dataTables.min.css"/>
 
         <script type="text/javascript" charset="utf8"
                 src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
-
-        <script type="text/javascript" charset="utf8"
-                src="https://cdn.datatables.net/buttons/1.5.1/js/dataTables.buttons.min.js"></script>
 
         <script type="text/javascript" charset="utf8"
                 src="https://cdn.datatables.net/select/1.2.5/js/dataTables.select.min.js"></script>
@@ -35,15 +29,6 @@
                 "paging":   false,
                 "info":     false,
                 select: true,
-                dom: 'Bfrtip',
-                buttons: [
-                    {
-                        text: 'Reset filters',
-                        action: function () {
-                            searchWithFilter('','','');
-                        }
-                    }
-                ]
             } );
         }
 
@@ -141,8 +126,8 @@
 
     <script>
         function pageButtonClick() {
-            /*var htmlCode = '<button type="button" onClick="searchWithFilter(\'\',\'\',\'\');">RESET FILTERS</button>';
-            document.getElementById('devices-table_wrapper').insertAdjacentHTML('afterBegin',htmlCode);*/
+            var htmlCode = '<button type="button" onClick="searchWithFilter(\'\',\'\',\'\');">RESET FILTERS</button>';
+            document.getElementById('devices-table_wrapper').insertAdjacentHTML('afterBegin',htmlCode);
 
             var buttonsBlock = document.getElementById('page-buttons-block');
             var lastButtonBlock = document.getElementById('last-page-button-block');
@@ -167,7 +152,7 @@
 
 
             if (totalPages > 0){
-                htmlCode = '<input type="button" class="paginate-button" data-page="' + totalPages + '" value="' + totalPages + '"/>';
+                htmlCode = '<input type="button" class="paginate-button" data-page="' + totalPages + '" value="' + totalPages + '" onclick="lastPage()"/>';
                 lastButtonBlock.innerHTML = htmlCode;
             }
 
@@ -212,13 +197,18 @@
             var htmlCode='';
 
             if(i == currentPage){
-                htmlCode += '<input type="button" class="paginate-button current" data-page="' + i + '" value="' + i + '"/>\n';
+                htmlCode += '<input type="button" class="paginate-button current" data-page="' + i + '" value="' + i + '" onclick="goToPage(this)"/>\n';
             }
             else {
-                htmlCode += '<input type="button" class="paginate-button" data-page="' + i + '" value="' + i + '"/>\n';
+                htmlCode += '<input type="button" class="paginate-button" data-page="' + i + '" value="' + i + '" onclick="goToPage(this)"/>\n';
             }
 
             return htmlCode;
+        }
+        
+        function goToPage(element) {
+            var pageNum = element.getAttribute('data-page');
+            goToSelectedPageNum(pageNum);
         }
     </script>
 
@@ -268,6 +258,10 @@
                         <apex:actionFunction name="firstPage" action="{!first}" reRender="device-list,configuration-info-block"/>
                         <apex:actionFunction name="lastPage" action="{!last}" reRender="device-list,configuration-info-block"/>
 
+                        <apex:actionFunction name="goToSelectedPageNum" action="{!goToSelectedPage}" reRender="device-list,configuration-info-block">
+                            <apex:param value="" name="selectedPage"/>
+                        </apex:actionFunction>
+
                         <apex:outputPanel id="device-list">
                             <script>
                                 var totalPages = {!totalPagesNum};
@@ -302,7 +296,7 @@
 
                                 <tbody>
                                 <apex:repeat value="{!deviceList}" var="deviceUnit">
-                                    <tr style="background-color: white;" onclick="selectRow(this, '{!deviceUnit.RecordType.name}', '{!deviceUnit.id}', '{!deviceUnit.ImageUrl__c}')">
+                                    <tr onclick="selectRow('{!deviceUnit.RecordType.name}', '{!deviceUnit.id}', '{!deviceUnit.ImageUrl__c}')">
                                         <td class="table-col-30" title="{!deviceUnit.name}">
                                             <p class="overlapping-text"><apex:outputText value="{!deviceUnit.name}" /></p>
                                         </td>
@@ -327,7 +321,7 @@
 
                             <div id="pagination-buttons-block">
                                 <input type="button" class="paginate-button {!IF(devicePaginationController.hasPrevious,'','disabled')}" value="Previous" onclick="previousPage()"/>
-                                <input id="first-page-button" type="button" class="paginate-button" value="1"/>
+                                <input id="first-page-button" type="button" class="paginate-button" value="1" onclick="firstPage()"/>
 
                                 <div style="display:inline-block" id="page-buttons-block"></div>
                                 <div style="display:inline-block" id="last-page-button-block"></div>
