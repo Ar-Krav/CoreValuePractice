@@ -22,6 +22,32 @@ $(document).ready(function () {
     });
 });
 
+function showEmployeeAvatar(event, imageUrl) {
+    var el = $(event.currentTarget);
+    var x = el.position().left + el.width*2;
+    var y = el.position().top;
+    if (imageUrl !== null) {
+        var image = $('#alertImage');
+        image.attr("src", imageUrl);
+        image.attr("width", 100);
+        image.attr("heidht", 100);
+        image.css({
+            "top": y,
+            "left": x,
+            "position": "absolute",
+            "z-index": 10,
+            "display": "block"
+        });
+    }
+}
+
+function hideEmployeeAvatar() {
+    var image = $('#alertImage');
+    image.css({"display": "none"});
+    image.attr("width", 0);
+    image.attr("heidht", 0);
+}
+
 function setupDataTable() {
     var table = $('#renderTable').DataTable({
         "order": [[1, "desc"]]

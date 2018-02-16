@@ -16,3 +16,7 @@ body .bPageBlock .pbBody .pbSubheader h3{
 body .bPageBlock .pbBody .labelCol{
     text-align:left;
 }
+tr, td {
+       max-width: 90px;
+       word-break: break-word;
+}

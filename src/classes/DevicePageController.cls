@@ -103,7 +103,9 @@ public with sharing class DevicePageController {
     }
 
     public Integer totalPagesNum{
-        get;
+        get{
+            return (Integer) Math.ceil((Decimal)devicePaginationController.getResultSize() / ConstantsUtil.itemsOnOnePaginationPage);
+        }
         set;
     }
 
@@ -120,6 +122,8 @@ public with sharing class DevicePageController {
     public void next(){
         deviceConfigurationList = null;
         this.devicePaginationController.next();
+
+        System.debug('page: ' + devicePaginationController.getPageNumber());
     }
 
     public void previous(){
@@ -134,11 +138,6 @@ public with sharing class DevicePageController {
 
         isShowLocationSelection = adminsCities.size() > 1 ? true : false;
         selectedCity = isShowLocationSelection ? ConstantsUtil.allCityMode : adminsCities.get(0).Id;
-
-        totalPagesNum = (Integer) Math.ceil((Decimal)devicePaginationController.getResultSize() / ConstantsUtil.itemsOnOnePaginationPage);
-
-        System.debug('totalPages: ' + totalPagesNum);
-        System.debug('current: ' + devicePaginationController.getPageNumber());
     }
 
     public List<Hardware__c> getHardwares(){

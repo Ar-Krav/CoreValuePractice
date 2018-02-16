@@ -10,6 +10,14 @@ $(document).ready(function() {
     $('.command-buttons-margin').css({
                 'margin-left': ($('.servers-select-list').width()/2 - $('.add-button').width() - $('.cancel-button').width()/2 + 'px')
                 });
+    if($('.on-add').val() == ''){
+        $( ".on-add" ).prop( "disabled", true );
+        $( ".record-input" ).prop( "disabled", true );
+        $( ".ip-address" ).prop( "disabled", true );
+        $( ".description-input" ).prop( "disabled", true );
+        $( ".add-button" ).prop( "disabled", true );
+        $( ".add-button" ).addClass( "btnDisabled" );
+    }
     });
 
 function addNewServerIpValidation(){
@@ -35,3 +43,13 @@ function editServerIpValidation() {
             $('.ip-error-text').hide();
             }
     }
+
+function removeOddWhitespacesFromName() {
+    $('.server-name').val($.trim($('.server-name').val()));
+    $('.server-name').val($.trim($('.server-name').val().replace(/[\s\s+]+/g, ' ')));
+}
+
+function removeOddWhitespacesFromDesc() {
+    $('.description-input').val($.trim($('.description-input').val()));
+    $('.description-input').val($.trim($('.description-input').val().replace(/[\s\s+]+/g, ' ')));
+}

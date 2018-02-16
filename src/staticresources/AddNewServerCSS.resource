@@ -32,4 +32,4 @@
 .description-input {
     min-width: 182px;
     min-height:100px;
-};;
+}

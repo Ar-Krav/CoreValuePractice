@@ -10,11 +10,21 @@
 
 #cityDropDown {
     width: 10%;
+    position: absolute;
 }
 
 .fulltable{
     display: none;
 }
+
+#alertImage{
+    display: none;
+}
+tr td{
+    max-width: 90px;
+    word-break: break-word;
+}
+
 /*table*/
 
 /*
@@ -28,5 +38,4 @@ tfoot input {
     width: 100%;
     padding: 3px;
     box-sizing: border-box;
-
 }
