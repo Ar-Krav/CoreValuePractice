@@ -4,7 +4,7 @@
 
 public with sharing class DevicePageController {
     private DevicePageDataModel deviceModel = new DevicePageDataModel();
-    private String selectedCity;
+    public String selectedCity;
 
 
     public Boolean isShowLocationSelection{
@@ -14,6 +14,22 @@ public with sharing class DevicePageController {
 
     public List<Location__c> adminsCities{
         get;
+        set;
+    }
+
+    public String allCitiesLabel{
+        get;
+        set;
+    }
+
+    public List<SelectOption> adminCitiesOption{
+        get{
+            if (adminCitiesOption == null) {
+
+            }
+
+            return adminCitiesOption;
+        }
         set;
     }
 
@@ -122,8 +138,6 @@ public with sharing class DevicePageController {
     public void next(){
         deviceConfigurationList = null;
         this.devicePaginationController.next();
-
-        System.debug('page: ' + devicePaginationController.getPageNumber());
     }
 
     public void previous(){
@@ -141,7 +155,16 @@ public with sharing class DevicePageController {
 
         adminsCities = deviceModel.getLocationUserAdmin(UserInfo.getUserId());
 
-        isShowLocationSelection = adminsCities.size() > 1 ? true : false;
+        isShowLocationSelection = adminsCities.size() > 1;
+
+
+        List<String> adminsCitiesLabel = new List<String>();
+        for (Location__c location : adminsCities) {
+            adminsCitiesLabel.add(location.Name);
+        }
+
+        allCitiesLabel = deviceModel.getIsGlobalAdmin() ? ConstantsUtil.allCityMode : String.join(adminsCitiesLabel, ' AND ');
+
         selectedCity = isShowLocationSelection ? ConstantsUtil.allCityMode : adminsCities.get(0).Id;
     }
 
@@ -160,8 +183,6 @@ public with sharing class DevicePageController {
     public PageReference setDeviceConfigurationListData(){
         selectedDeviceId =  Apexpages.currentPage().getParameters().get('deviceIdParameter');
         deviceImageUrl =  Apexpages.currentPage().getParameters().get('deviceImgUrl');
-
-        System.debug('image URL: ' + deviceImageUrl);
 
         deviceConfigurationList = deviceModel.getListHardwaresOfDevice(selectedDeviceId);
         return null;
@@ -187,5 +208,17 @@ public with sharing class DevicePageController {
         redirector.setRedirect(true);
 
         return redirector;
+    }
+
+    private List<SelectOption> getSelectOptions(){
+        List<SelectOption> lst = new List<SelectOption>();
+
+        lst.add(new SelectOption(ConstantsUtil.allCityMode, allCitiesLabel));
+
+        for (Location__c location : adminsCities) {
+            lst.add(new SelectOption(location.id, location.name));
+        }
+
+        return lst;
     }
 }

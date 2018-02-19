@@ -4,8 +4,13 @@
 
 public with sharing class DevicePageDataModel {
 
-    String nameFilterValue, seriaFilterValue, typeFilterValue, ownerFilterValue;
-    List<Location__c> allOfficeLocation;
+    private String nameFilterValue, seriaFilterValue, typeFilterValue, ownerFilterValue;
+    private List<Location__c> allOfficeLocation;
+    private Boolean isGlobalAdmin;
+
+    public Boolean getIsGlobalAdmin(){
+        return isGlobalAdmin;
+    }
 
     public void setFilterFields(String nameFilterValue, String ownerFilterValue, String seriaFilterValue, String typeFilterValue){
         this.nameFilterValue = nameFilterValue;
@@ -98,7 +103,7 @@ public with sharing class DevicePageDataModel {
 
     public List<Location__c> getLocationUserAdmin(Id id){
         List<UserPermissions__c> userPermissionsLocations = getSigndUpUserPermissions(id);
-        Boolean isGlobalAdmin = userPermissionsLocations.get(0).Location__c == null;
+        isGlobalAdmin = userPermissionsLocations.get(0).Location__c == null;
         List<Location__c> allLocations = getLocations();
 
 

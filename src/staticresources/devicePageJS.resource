@@ -38,9 +38,11 @@ function doDeviceFiltration(e){
 
         function sortDeviceByLocation(){
             var dropDownList = document.getElementById('officeLocationsDropDown');
-            var selectedItem = dropDownList.options[dropDownList.selectedIndex].value;
+            var selectedItem = dropDownList.options[dropDownList.selectedIndex];
 
-            changeLocation(selectedItem);
+            document.getElementById('selected-city').innerText = selectedItem.text;
+
+            changeLocation(selectedItem.value);
 
         }
 
