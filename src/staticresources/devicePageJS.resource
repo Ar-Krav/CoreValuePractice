@@ -36,16 +36,6 @@ function doDeviceFiltration(e){
             }
         }
 
-        function sortDeviceByLocation(){
-            var dropDownList = document.getElementById('officeLocationsDropDown');
-            var selectedItem = dropDownList.options[dropDownList.selectedIndex];
-
-            document.getElementById('selected-city').innerText = selectedItem.text;
-
-            changeLocation(selectedItem.value);
-
-        }
-
         function selectRow(recordType, deviceId, deviceImgUrl) {
 
             var availableToChangeHardware = ['PC', 'Notebook', 'Server'];

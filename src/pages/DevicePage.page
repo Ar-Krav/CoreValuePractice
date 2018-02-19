@@ -23,25 +23,16 @@
         <link rel="stylesheet" type="text/css" href="{!$Resource.devicePageStyle}"/>
     </head>
 
-    <apex:pageBlock title="Devices from: ">
+    <apex:pageBlock title="Devices from: {!selectedCitiesLabel}">
 
         <apex:pageBlockButtons location="top">
             <apex:form >
-                <apex:actionFunction name="changeLocation" action="{!sortDeviceByLocation}" rerender="device-list,configuration-info-block" status="deviceListReadyStatus">
-                    <apex:param value="" name="selectedLocation"></apex:param>
-                </apex:actionFunction>
+                <apex:actionFunction name="changeLocation" action="{!sortDeviceByLocation}" rerender="device-list,configuration-info-block"/>
 
                 <apex:outputPanel id="city-selection-block" rendered="{!isShowLocationSelection}">
-                    <apex:outputText style="color: #000;font-size: 1.2em;font-weight:bold;" value="Devices from:"/>
-
-                    <span id="selected-city"></span>
-
-                    <select style="color: #000;font-size: 1.1em;" id="officeLocationsDropDown" onchange="sortDeviceByLocation()">
-                            <option value="all-cities">{!allCitiesLabel}</option>
-                            <apex:repeat value="{!adminsCities}" var="location">
-                                <option value="{!location.id}">{!location.name}</option>
-                            </apex:repeat>
-                    </select>
+                    <apex:selectList style="color: #000;font-size: 1.1em;" id="officeLocationsDropDown" value="{!selectedCity}" onchange="changeLocation()" size="1">
+                        <apex:selectOptions value="{!adminCitiesOption}"/>
+                    </apex:selectList>
                 </apex:outputPanel>
 
             </apex:form>

@@ -4,32 +4,41 @@
 
 public with sharing class DevicePageController {
     private DevicePageDataModel deviceModel = new DevicePageDataModel();
-    public String selectedCity;
+    private String allCitiesLabel;
+    private List<Location__c> adminsCities;
 
+
+    public String selectedCity{
+        get;
+        set;
+    }
+
+    public String selectedCitiesLabel{
+        get{
+            if (!isShowLocationSelection) {
+                selectedCitiesLabel = adminsCities.get(0).Name;
+            }
+            else{
+                selectedCitiesLabel = allCitiesLabel;
+                for (Location__c location : adminsCities) {
+                    if (location.id == selectedCity) {
+                        selectedCitiesLabel = location.name;
+                    }
+                }
+            }
+
+            return selectedCitiesLabel;
+        }
+        set;
+    }
 
     public Boolean isShowLocationSelection{
         get;
         set;
     }
 
-    public List<Location__c> adminsCities{
-        get;
-        set;
-    }
-
-    public String allCitiesLabel{
-        get;
-        set;
-    }
-
     public List<SelectOption> adminCitiesOption{
-        get{
-            if (adminCitiesOption == null) {
-
-            }
-
-            return adminCitiesOption;
-        }
+        get;
         set;
     }
 
@@ -96,11 +105,6 @@ public with sharing class DevicePageController {
         set;
     }
 
-    public List<Location__c> officeLocations{
-        get;
-        set;
-    }
-
     public Id selectedDeviceId{
         get;
         set;
@@ -150,22 +154,22 @@ public with sharing class DevicePageController {
         devicePaginationController.setPageNumber(selectedPageNum);
     }
 
+
     public DevicePageController() {
         deviceModel.setFilterFields(nameFilterValue, ownerFilterValue, seriaFilterValue, typeFilterValue);
 
         adminsCities = deviceModel.getLocationUserAdmin(UserInfo.getUserId());
 
-        isShowLocationSelection = adminsCities.size() > 1;
+        if (adminsCities.size() > 1) {
+            isShowLocationSelection = true;
+            adminCitiesOption = getSelectOptions();
+            allCitiesLabel = getAllCitiesLabel();
 
-
-        List<String> adminsCitiesLabel = new List<String>();
-        for (Location__c location : adminsCities) {
-            adminsCitiesLabel.add(location.Name);
+            selectedCity = ConstantsUtil.allCityMode;
         }
-
-        allCitiesLabel = deviceModel.getIsGlobalAdmin() ? ConstantsUtil.allCityMode : String.join(adminsCitiesLabel, ' AND ');
-
-        selectedCity = isShowLocationSelection ? ConstantsUtil.allCityMode : adminsCities.get(0).Id;
+        else {
+            selectedCity = adminsCities.get(0).Id;
+        }
     }
 
     public List<Hardware__c> getHardwares(){
@@ -173,7 +177,6 @@ public with sharing class DevicePageController {
     }
 
     public PageReference sortDeviceByLocation(){
-        selectedCity = ApexPages.currentPage().getParameters().get('selectedLocation');
         devicePaginationController = deviceModel.getDevicesStandardSetController(selectedCity);
 
         return null;
@@ -211,14 +214,23 @@ public with sharing class DevicePageController {
     }
 
     private List<SelectOption> getSelectOptions(){
-        List<SelectOption> lst = new List<SelectOption>();
+        List<SelectOption> selectionList = new List<SelectOption>();
 
-        lst.add(new SelectOption(ConstantsUtil.allCityMode, allCitiesLabel));
+        selectionList.add(new SelectOption(ConstantsUtil.allCityMode, allCitiesLabel));
 
         for (Location__c location : adminsCities) {
-            lst.add(new SelectOption(location.id, location.name));
+            selectionList.add(new SelectOption(location.id, location.name));
         }
 
-        return lst;
+        return selectionList;
+    }
+
+    private String getAllCitiesLabel(){
+        List<String> adminsCitiesLabel = new List<String>();
+        for (Location__c location : adminsCities) {
+            adminsCitiesLabel.add(location.Name);
+        }
+
+        return deviceModel.getIsGlobalAdmin() ? ConstantsUtil.allCityMode : String.join(adminsCitiesLabel, ' & ');
     }
 }
