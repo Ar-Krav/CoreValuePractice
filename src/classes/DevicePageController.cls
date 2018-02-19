@@ -21,7 +21,7 @@ public with sharing class DevicePageController {
             else{
                 selectedCitiesLabel = allCitiesLabel;
                 for (Location__c location : adminsCities) {
-                    if (location.id == selectedCity) {
+                    if (selectedCity != ConstantsUtil.allCityMode && location.id == selectedCity) {
                         selectedCitiesLabel = location.name;
                     }
                 }
@@ -161,9 +161,11 @@ public with sharing class DevicePageController {
         adminsCities = deviceModel.getLocationUserAdmin(UserInfo.getUserId());
 
         if (adminsCities.size() > 1) {
+
             isShowLocationSelection = true;
-            adminCitiesOption = getSelectOptions();
+
             allCitiesLabel = getAllCitiesLabel();
+            adminCitiesOption = getSelectOptions();
 
             selectedCity = ConstantsUtil.allCityMode;
         }
@@ -231,6 +233,6 @@ public with sharing class DevicePageController {
             adminsCitiesLabel.add(location.Name);
         }
 
-        return deviceModel.getIsGlobalAdmin() ? ConstantsUtil.allCityMode : String.join(adminsCitiesLabel, ' & ');
+        return deviceModel.getIsGlobalAdmin() ? 'All cities' : String.join(adminsCitiesLabel, ' & ');
     }
 }
