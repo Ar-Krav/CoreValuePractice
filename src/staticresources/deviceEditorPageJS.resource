@@ -35,7 +35,8 @@ $(document).ready(function() {
 
         function redrawStockDataTable(){
             return $('#stock-table').DataTable( {
-                "info":     false
+                "info":     false,
+                select: true
             } );
         }
 

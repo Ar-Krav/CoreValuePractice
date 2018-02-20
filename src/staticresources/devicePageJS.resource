@@ -2,7 +2,7 @@ function redrawDeviceDataTable(){
     return $('#devices-table').DataTable( {
         "paging":   false,
         "info":     false,
-        select: true,
+        select: true
     } );
 }
 

@@ -4,12 +4,18 @@
 
 <apex:page id="DeviceConfigurationEditor" controller="DeviceConfigurationPageController">
     <head>
-        <apex:includescript value="//code.jquery.com/jquery-1.11.1.min.js"/>
+        <apex:includescript value="https://code.jquery.com/jquery-1.12.4.js"/>
         <link rel="stylesheet" type="text/css"
               href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"/>
 
+        <link rel="stylesheet" type="text/css"
+              href="https://cdn.datatables.net/select/1.2.5/css/select.dataTables.min.css"/>
+
         <script type="text/javascript" charset="utf8"
                 src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+
+        <script type="text/javascript" charset="utf8"
+                src="https://cdn.datatables.net/select/1.2.5/js/dataTables.select.min.js"></script>
 
         <apex:includeScript value="{!$Resource.deviceEditorPageJS}"/>
     </head>
@@ -213,13 +219,12 @@
                                     <th>Inventory code</th>
                                     <th>in device</th>
                                     <th>device invNo</th>
-                                    <th></th>
                                 </tr>
                                 </thead>
 
                                 <tbody>
                                 <apex:repeat value="{!hardwareListInStock}" var="hardwareUnit">
-                                    <tr>
+                                    <tr onClick="setNewHardwareConf('{!hardwareUnit.id}');">
                                         <td>
                                             <apex:outputText value="{!hardwareUnit.name}" />
                                         </td>
@@ -234,10 +239,6 @@
 
                                         <td>
                                             <apex:outputText value="{!hardwareUnit.Parent__r.InvNo__c}" />
-                                        </td>
-
-                                        <td>
-                                            <button type="button" onClick="setNewHardwareConf('{!hardwareUnit.id}');" style="width:100%;">Confirm</button>
                                         </td>
                                     </tr>
                                 </apex:repeat>

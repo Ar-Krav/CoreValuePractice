@@ -150,6 +150,8 @@ public with sharing class DevicePageController {
     }
 
     public void goToSelectedPage(){
+        deviceConfigurationList = null;
+
         Integer selectedPageNum = Integer.valueOf(ApexPages.currentPage().getParameters().get('selectedPage'));
         devicePaginationController.setPageNumber(selectedPageNum);
     }
