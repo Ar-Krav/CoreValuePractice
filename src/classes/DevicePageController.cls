@@ -3,9 +3,14 @@
  */
 
 public with sharing class DevicePageController {
-    private DevicePageDataModel deviceModel = new DevicePageDataModel();
+    private TestApexModel apexModel = new TestApexModel();
     private String allCitiesLabel;
-    private List<Location__c> adminsCities;
+    private Boolean isUserGlobalAdmin;
+
+    public List<Location__c> adminsCities{
+        get;
+        set;
+    }
 
 
     public String selectedCity{
@@ -42,131 +47,17 @@ public with sharing class DevicePageController {
         set;
     }
 
-    public List<SelectOption> relocationOptions{
+    public Boolean isRelocateMode{
         get;
         set;
-    }
-
-    public List<Hardware__c> deviceList {
-        get{ return devicePaginationController.getRecords(); }
-
-    }
-
-    public String deviceImageUrl{
-        get;
-        set;
-    }
-
-    public List<Hardware__c> deviceConfigurationList{
-        get;
-        set;
-    }
-
-    public String nameFilterValue{
-        get {
-            if (nameFilterValue == null) {
-                nameFilterValue = '';
-            }
-
-            return nameFilterValue;
-        }
-
-        set;
-    }
-
-    public String ownerFilterValue{
-        get {
-            if (ownerFilterValue == null) {
-                ownerFilterValue = '';
-            }
-
-            return ownerFilterValue;
-        }
-
-        set;
-    }
-
-    public String seriaFilterValue{
-        get {
-            if (seriaFilterValue == null) {
-                seriaFilterValue = '';
-            }
-
-            return seriaFilterValue;
-        }
-
-        set;
-    }
-
-    public String typeFilterValue{
-        get {
-            if (typeFilterValue == null) {
-                typeFilterValue = '';
-            }
-
-            return typeFilterValue;
-        }
-
-        set;
-    }
-
-    public Id selectedDeviceId{
-        get;
-        set;
-    }
-
-    public ApexPages.StandardSetController devicePaginationController{
-        get{
-            if (devicePaginationController == null) {
-                devicePaginationController = deviceModel.getDevicesStandardSetController(selectedCity);
-            }
-
-            devicePaginationController.setPageSize(ConstantsUtil.itemsOnOnePaginationPage);
-            return devicePaginationController;
-        }
-        set;
-    }
-
-    public Integer totalPagesNum{
-        get{
-            return (Integer) Math.ceil((Decimal)devicePaginationController.getResultSize() / ConstantsUtil.itemsOnOnePaginationPage);
-        }
-        set;
-    }
-
-    public void first(){
-        deviceConfigurationList = null;
-        this.devicePaginationController.first();
-    }
-
-    public void last(){
-        deviceConfigurationList = null;
-        this.devicePaginationController.last();
-    }
-
-    public void next(){
-        deviceConfigurationList = null;
-        this.devicePaginationController.next();
-    }
-
-    public void previous(){
-        deviceConfigurationList = null;
-        this.devicePaginationController.previous();
-    }
-
-    public void goToSelectedPage(){
-        deviceConfigurationList = null;
-
-        Integer selectedPageNum = Integer.valueOf(ApexPages.currentPage().getParameters().get('selectedPage'));
-        devicePaginationController.setPageNumber(selectedPageNum);
     }
 
 
     public DevicePageController() {
-        deviceModel.setFilterFields(nameFilterValue, ownerFilterValue, seriaFilterValue, typeFilterValue);
+        isUserGlobalAdmin = apexModel.isUSerGlobalAdmin(UserInfo.getUserId());
+        adminsCities = apexModel.getUserAdminLocations(UserInfo.getUserId(), isUserGlobalAdmin);
 
-        adminsCities = deviceModel.getLocationUserAdmin(UserInfo.getUserId());
-        relocationOptions = deviceModel.getRelocationSelectedOptions();
+        isRelocateMode = false;
 
         if (adminsCities.size() > 1) {
 
@@ -182,57 +73,16 @@ public with sharing class DevicePageController {
         }
     }
 
-    public List<Hardware__c> getHardwares(){
-        return (List<Hardware__c>) devicePaginationController.getRecords();
-    }
-
-    public PageReference sortDeviceByLocation(){
-        devicePaginationController = deviceModel.getDevicesStandardSetController(selectedCity);
+    public PageReference changeMode(){
+        isRelocateMode = !isRelocateMode;
 
         return null;
-    }
-
-    public PageReference relocateDevice(){
-
-        return null;
-    }
-
-
-    public PageReference setDeviceConfigurationListData(){
-        selectedDeviceId =  Apexpages.currentPage().getParameters().get('deviceIdParameter');
-        deviceImageUrl =  Apexpages.currentPage().getParameters().get('deviceImgUrl');
-
-        deviceConfigurationList = deviceModel.getListHardwaresOfDevice(selectedDeviceId);
-        return null;
-    }
-
-    public PageReference alertMonitorChanging(){
-        deviceConfigurationList = null;
-        return null;
-    }
-
-    public PageReference setFilteredDeviceData(){
-        deviceConfigurationList = null;
-        deviceModel.setFilterFields(nameFilterValue, ownerFilterValue, seriaFilterValue, typeFilterValue);
-        devicePaginationController = deviceModel.getDevicesStandardSetController(selectedCity);
-
-        return null;
-    }
-
-    public PageReference redirectToConfigurationEditorPage(){
-        PageReference redirector = Page.DeviceConfigurationEditor;
-        redirector.getParameters().put(ConstantsUtil.TAB_TAG_PREFIX, ConstantsUtil.DEVICES_TAB_TAG);
-        redirector.getParameters().put('deviceId',selectedDeviceId);
-        redirector.setRedirect(true);
-
-        return redirector;
     }
 
     private List<SelectOption> getAdminCitiesOptions(){
         List<SelectOption> selectionList = new List<SelectOption>();
 
         selectionList.add(new SelectOption(ConstantsUtil.allCityMode, allCitiesLabel));
-
         for (Location__c location : adminsCities) {
             selectionList.add(new SelectOption(location.id, location.name));
         }
@@ -246,6 +96,6 @@ public with sharing class DevicePageController {
             adminsCitiesLabel.add(location.Name);
         }
 
-        return deviceModel.getIsGlobalAdmin() ? 'All cities' : String.join(adminsCitiesLabel, ' & ');
+        return isUserGlobalAdmin ? 'All cities' : String.join(adminsCitiesLabel, ' & ');
     }
 }

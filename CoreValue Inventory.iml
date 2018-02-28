@@ -52,10 +52,6 @@
                             <option name="selected" value="true" />
                           </MetadataEntry>
                           <MetadataEntry>
-                            <option name="name" value="DevicePageDataModel" />
-                            <option name="selected" value="true" />
-                          </MetadataEntry>
-                          <MetadataEntry>
                             <option name="name" value="EditServerRecordController" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
@@ -139,6 +135,10 @@
                             <option name="name" value="DeviceConfigurationService" />
                             <option name="selected" value="true" />
                           </MetadataEntry>
+                          <MetadataEntry>
+                            <option name="name" value="DeviceConfEditorService" />
+                            <option name="selected" value="true" />
+                          </MetadataEntry>
                         </list>
                       </option>
                       <option name="name" value="ApexClass" />
@@ -146,10 +146,6 @@
                     <MetadataType>
                       <option name="entries">
                         <list>
-                          <MetadataEntry>
-                            <option name="name" value="DeviceWithConfigTables" />
-                            <option name="selected" value="true" />
-                          </MetadataEntry>
                           <MetadataEntry>
                             <option name="name" value="RelocateTAble" />
                             <option name="selected" value="true" />

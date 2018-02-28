@@ -3,7 +3,7 @@
  */
 
 public with sharing class DeviceConfigurationPageController {
-    private DevicePageDataModel deviceModel = new DevicePageDataModel();
+    private DeviceConfEditorService deviceConfEditorService = new DeviceConfEditorService();
 
     public Hardware__c deviceUnit{
         get;
@@ -84,9 +84,9 @@ public with sharing class DeviceConfigurationPageController {
 
 
     public DeviceConfigurationPageController(){
-        deviceUnit = deviceModel.getDeviceInfoById(ApexPages.currentPage().getParameters().get('deviceId'));
+        deviceUnit = deviceConfEditorService.getDeviceInfoById(ApexPages.currentPage().getParameters().get('deviceId'));
 
-        currentDeviceConfiguration = deviceModel.getDeviceConfMap(deviceUnit.id);
+        currentDeviceConfiguration = deviceConfEditorService.getDeviceConfMap(deviceUnit.id);
     }
 
 
@@ -99,14 +99,14 @@ public with sharing class DeviceConfigurationPageController {
             newConfIds.add(hardware.id);
         }
 
-        hardwareListInStock = deviceModel.getStockHardware(soqlHardwareType, newConfIds, deviceUnit);
+        hardwareListInStock = deviceConfEditorService.getStockHardware(soqlHardwareType, newConfIds, deviceUnit);
 
         return null;
     }
 
     public PageReference setNewDeviceComponent(){
         Id newHardwareId = ApexPages.currentPage().getParameters().get('hardwareId');
-        newDeviceConfiguration.put(selectedHardwareType, deviceModel.getHardwareInfoById(newHardwareId));
+        newDeviceConfiguration.put(selectedHardwareType, deviceConfEditorService.getHardwareInfoById(newHardwareId));
 
         isDataToSave = true;
         hardwareListInStock = null;
@@ -188,7 +188,7 @@ public with sharing class DeviceConfigurationPageController {
 
     public PageReference saveNewConfig(){
 
-        deviceModel.updateNewDeviceConfig(currentDeviceConfiguration, newDeviceConfiguration, removedDeviceConfiguration, deviceUnit.id);
+        deviceConfEditorService.updateNewDeviceConfig(currentDeviceConfiguration, newDeviceConfiguration, removedDeviceConfiguration, deviceUnit.id);
         return closeEditor();
     }
 
