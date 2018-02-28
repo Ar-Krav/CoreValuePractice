@@ -49,7 +49,13 @@ public with sharing class RelocateTableController{
     }
 
     public List<SelectOption> relocationOptions{
-        get;
+        get{
+            if (relocationOptions == null) {
+                relocationOptions = deviceService.getRelocationSelectedOptions();
+            }
+
+            return relocationOptions;
+        }
         set;
     }
 
@@ -135,7 +141,7 @@ public with sharing class RelocateTableController{
 
 
     public RelocateTableController() {
-        relocationOptions = deviceService.getRelocationSelectedOptions();
+
     }
 
     public PageReference setDeviceConfigurationListData(){
@@ -160,7 +166,6 @@ public with sharing class RelocateTableController{
 
     public PageReference relocateDevice(){
         deviceService.updateDeviceLocation(deviceList);
-
         return null;
     }
 

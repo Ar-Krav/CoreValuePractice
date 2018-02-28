@@ -47,10 +47,17 @@ public with sharing class TestApexController {
         set;
     }
 
+    public Boolean isRelocateMode{
+        get;
+        set;
+    }
+
 
     public TestApexController() {
         isUserGlobalAdmin = apexModel.isUSerGlobalAdmin(UserInfo.getUserId());
         adminsCities = apexModel.getUserAdminLocations(UserInfo.getUserId(), isUserGlobalAdmin);
+
+        isRelocateMode = false;
 
         if (adminsCities.size() > 1) {
 
@@ -64,6 +71,12 @@ public with sharing class TestApexController {
         else {
             selectedCity = adminsCities.get(0).Id;
         }
+    }
+
+    public PageReference changeMode(){
+        isRelocateMode = !isRelocateMode;
+
+        return null;
     }
 
     private List<SelectOption> getAdminCitiesOptions(){

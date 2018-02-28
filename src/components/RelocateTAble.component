@@ -6,112 +6,128 @@
     <apex:attribute name="devicesCity" description="devices will be shown from city with this ID" type="String" required="true" assignTo="{!selectedCity}"/>
     <apex:attribute name="availableCities" description="devices will be shown from city with this ID" type="Location__c[]" required="true" assignTo="{!userAdminLocationsArray}"/>
 
+    <apex:attribute name="isRelocateMode" description="some desc" type="Boolean" required="true"/>
 
-            <div id="device-block">
-                <apex:pageBlock title="Assemblies">
 
-                    <apex:actionFunction action="{!setDeviceConfigurationListData}" name="showDeviceHardwareData" rerender="configuration-info-block,configuration-edit-button-block" status="configurationReadyStatus">
-                        <apex:param name="deviceIdParameter" value="" />
-                        <apex:param name="deviceImgUrl" value="" assignTo="{!deviceImageUrl}"/>
-                    </apex:actionFunction>
+    <br/>
+    <apex:outputText value="is relocate: {!isRelocateMode}"/>
+    <br/>
+    <apex:outputPanel rendered="{!isRelocateMode}">
+        <apex:outputPanel >
+            <apex:outputText value="is relocate v2: {!isRelocateMode}"/>
+        </apex:outputPanel>
+    </apex:outputPanel>
 
-                    <apex:actionFunction name="alertMonitorChanging" rerender="configuration-info-block,configuration-edit-button-block" action="{!alertMonitorChanging}" onComplete="alert('Only devices can be changed!');"/>
 
-                    <apex:actionFunction action="{!setFilteredDeviceData}" name="searchWithFilter" rerender="device-list,configuration-info-block,configuration-edit-button-block" status="deviceListReadyStatus">
-                        <apex:param name="deviceNameFilter" value="" assignTo="{!deviceTableFilters.nameFilterValue}"/>
-                        <apex:param name="deviceOwnerFilter" value="" assignTo="{!deviceTableFilters.ownerFilterValue}"/>
-                        <apex:param name="deviceSeriaFilter" value="" assignTo="{!deviceTableFilters.seriaFilterValue}"/>
-                        <apex:param name="deviceTypeFilter" value="" assignTo="{!deviceTableFilters.typeFilterValue}"/>
-                    </apex:actionFunction>
+    <apex:pageBlock title="Assemblies">
 
-                    <apex:actionFunction name="previousPage" action="{!previous}" reRender="device-list,configuration-info-block"/>
-                    <apex:actionFunction name="nextPage" action="{!next}" reRender="device-list,configuration-info-block"/>
-                    <apex:actionFunction name="firstPage" action="{!first}" reRender="device-list,configuration-info-block"/>
-                    <apex:actionFunction name="lastPage" action="{!last}" reRender="device-list,configuration-info-block"/>
+        <apex:actionFunction action="{!setDeviceConfigurationListData}" name="showDeviceHardwareData" rerender="configuration-info-block,configuration-edit-button-block" status="configurationReadyStatus">
+            <apex:param name="deviceIdParameter" value="" />
+            <apex:param name="deviceImgUrl" value="" assignTo="{!deviceImageUrl}"/>
+        </apex:actionFunction>
 
-                    <apex:actionFunction name="goToSelectedPageNum" action="{!goToSelectedPage}" reRender="device-list">
-                        <apex:param value="" name="selectedPage"/>
-                    </apex:actionFunction>
+        <apex:actionFunction name="alertMonitorChanging" rerender="configuration-info-block,configuration-edit-button-block" action="{!alertMonitorChanging}" onComplete="alert('Only devices can be changed!');"/>
 
-                    <apex:actionFunction name="relocateCitySelected" reRender="device-list" action="{!relocateDevice}"/>
+        <apex:actionFunction action="{!setFilteredDeviceData}" name="searchWithFilter" rerender="device-list,configuration-info-block,configuration-edit-button-block" status="deviceListReadyStatus">
+            <apex:param name="deviceNameFilter" value="" assignTo="{!deviceTableFilters.nameFilterValue}"/>
+            <apex:param name="deviceOwnerFilter" value="" assignTo="{!deviceTableFilters.ownerFilterValue}"/>
+            <apex:param name="deviceSeriaFilter" value="" assignTo="{!deviceTableFilters.seriaFilterValue}"/>
+            <apex:param name="deviceTypeFilter" value="" assignTo="{!deviceTableFilters.typeFilterValue}"/>
+        </apex:actionFunction>
 
-                    <apex:outputPanel id="device-list">
-                        <script>
-                            var totalPages = {!totalPagesNum};
-                            var currentPage = {!devicePaginationController.pageNumber};
+        <apex:actionFunction name="previousPage" action="{!previous}" reRender="device-list,configuration-info-block"/>
+        <apex:actionFunction name="nextPage" action="{!next}" reRender="device-list,configuration-info-block"/>
+        <apex:actionFunction name="firstPage" action="{!first}" reRender="device-list,configuration-info-block"/>
+        <apex:actionFunction name="lastPage" action="{!last}" reRender="device-list,configuration-info-block"/>
 
-                            if (deviceTable != null){
-                                deviceTable.destroy();
-                            }
+        <apex:actionFunction name="goToSelectedPageNum" action="{!goToSelectedPage}" reRender="device-list">
+            <apex:param value="" name="selectedPage"/>
+        </apex:actionFunction>
 
-                            deviceTable = redrawDeviceDataTable();
-                            pageButtonClick();
-                        </script>
+        <apex:actionFunction name="relocateCitySelected" reRender="device-list" action="{!relocateDevice}"/>
 
-                        <table id="devices-table" class="display" cellspacing="0">
-                            <thead>
-                            <tr>
-                                <th><apex:outputText value="{!$ObjectType.Hardware__c.Fields.Name.Label}"/></th>
-                                <th><apex:outputText value="{!$ObjectType.Hardware__c.Fields.AssignedToEmployee__c.Label}"/></th>
-                                <th><apex:outputText value="{!$ObjectType.Hardware__c.Fields.InvNo__c.Label}" /></th>
-                                <th><apex:outputText value="{!$Label.DeviceType}"/></th>
-                            </tr>
-                            </thead>
+        <apex:outputPanel id="device-list">
+            <script>
+                var totalPages = {!totalPagesNum};
+                var currentPage = {!devicePaginationController.pageNumber};
 
-                            <tfoot>
-                            <tr class="filters">
-                                <th><input class="filter-field" type="text" id="device-name-filter" value="{!deviceTableFilters.nameFilterValue}" placeholder="{!$ObjectType.Hardware__c.Fields.Name.Label}" onkeypress="doDeviceFiltration(event)" /></th>
-                                <th><input class="filter-field" type="text" id="device-owner-filter" value="{!deviceTableFilters.ownerFilterValue}" placeholder="{!$ObjectType.Hardware__c.Fields.AssignedToEmployee__c.Label}" onkeypress="doDeviceFiltration(event)" /></th>
-                                <th><input class="filter-field" type="text" id="device-seria-filter" value="{!deviceTableFilters.seriaFilterValue}" placeholder="{!$ObjectType.Hardware__c.Fields.InvNo__c.Label}" onkeypress="doDeviceFiltration(event)" /></th>
-                                <th><input class="filter-field" type="text" id="device-type-filter" value="{!deviceTableFilters.typeFilterValue}" placeholder="{!$Label.DeviceType}" onkeypress="doDeviceFiltration(event)" /></th>
-                            </tr>
-                            </tfoot>
+                if (deviceTable != null){
+                    deviceTable.destroy();
+                }
 
-                            <tbody>
-                            <apex:repeat value="{!deviceList}" var="deviceUnit">
-                                <tr onclick="selectRow('{!deviceUnit.RecordType.name}', '{!deviceUnit.id}', '{!deviceUnit.ImageUrl__c}')">
-                                    <td title="{!deviceUnit.name}">
-                                        <p class="overlapping-text"><apex:outputText value="{!deviceUnit.name}" /></p>
-                                    </td>
+                deviceTable = redrawDeviceDataTable();
+                pageButtonClick();
+            </script>
 
-                                    <td title="{!deviceUnit.assignedToEmployee__r.name}">
-                                        <p class="overlapping-text"><apex:outputText value="{!deviceUnit.assignedToEmployee__r.name}" /></p>
-                                    </td>
+            <table id="devices-table" class="display" cellspacing="0">
+                <thead>
+                <tr>
+                    <th><apex:outputText value="{!$ObjectType.Hardware__c.Fields.Name.Label}"/></th>
+                    <th><apex:outputText value="{!$ObjectType.Hardware__c.Fields.AssignedToEmployee__c.Label}"/></th>
+                    <th><apex:outputText value="{!$ObjectType.Hardware__c.Fields.InvNo__c.Label}" /></th>
+                    <th><apex:outputText value="{!$Label.DeviceType}"/></th>
+                    <apex:outputPanel rendered="{!isRelocateMode}"><th></th></apex:outputPanel>
+                </tr>
+                </thead>
 
-                                    <td title="{!deviceUnit.InvNo__c}">
-                                        <p class="overlapping-text"><apex:outputText value="{!deviceUnit.InvNo__c}" /></p>
-                                    </td>
+                <tfoot>
+                <tr class="filters">
+                    <th><input class="filter-field" type="text" id="device-name-filter" value="{!deviceTableFilters.nameFilterValue}" placeholder="{!$ObjectType.Hardware__c.Fields.Name.Label}" onkeypress="doDeviceFiltration(event)" /></th>
+                    <th><input class="filter-field" type="text" id="device-owner-filter" value="{!deviceTableFilters.ownerFilterValue}" placeholder="{!$ObjectType.Hardware__c.Fields.AssignedToEmployee__c.Label}" onkeypress="doDeviceFiltration(event)" /></th>
+                    <th><input class="filter-field" type="text" id="device-seria-filter" value="{!deviceTableFilters.seriaFilterValue}" placeholder="{!$ObjectType.Hardware__c.Fields.InvNo__c.Label}" onkeypress="doDeviceFiltration(event)" /></th>
+                    <th><input class="filter-field" type="text" id="device-type-filter" value="{!deviceTableFilters.typeFilterValue}" placeholder="{!$Label.DeviceType}" onkeypress="doDeviceFiltration(event)" /></th>
+                    <apex:outputPanel rendered="{!isRelocateMode}"><th></th></apex:outputPanel>
+                </tr>
+                </tfoot>
 
-                                    <td title="{!deviceUnit.RecordType.name}">
-                                        <p class="overlapping-text"><apex:outputText value="{!deviceUnit.RecordType.name}" /></p>
-                                    </td>
+                <tbody>
+                <apex:repeat value="{!deviceList}" var="deviceUnit">
+                    <tr onclick="if(!{!isRelocateMode}){selectRow('{!deviceUnit.RecordType.name}', '{!deviceUnit.id}', '{!deviceUnit.ImageUrl__c}')}">
+                        <td title="{!deviceUnit.name}">
+                            <p class="overlapping-text"><apex:outputText value="{!deviceUnit.name}" /></p>
+                        </td>
 
-                                    <td title="{!deviceUnit.RecordType.name}">
-                                        <apex:selectList id="replacementOptions" value="{!deviceUnit.LocationId__c}" size="1">
-                                            <apex:selectOptions value="{!relocationOptions}"/>
-                                        </apex:selectList>
-                                    </td>
-                                </tr>
-                            </apex:repeat>
-                            </tbody>
-                        </table>
+                        <td title="{!deviceUnit.assignedToEmployee__r.name}">
+                            <p class="overlapping-text"><apex:outputText value="{!deviceUnit.assignedToEmployee__r.name}" /></p>
+                        </td>
 
-                        <br/>
+                        <td title="{!deviceUnit.InvNo__c}">
+                            <p class="overlapping-text"><apex:outputText value="{!deviceUnit.InvNo__c}" /></p>
+                        </td>
 
-                        <button type="button" onclick="relocateCitySelected()">SAVE</button>
+                        <td title="{!deviceUnit.RecordType.name}">
+                            <p class="overlapping-text"><apex:outputText value="{!deviceUnit.RecordType.name}" /></p>
+                        </td>
 
-                        <div id="pagination-buttons-block">
-                            <input type="button" class="paginate-button {!IF(devicePaginationController.hasPrevious,'','disabled')}" value="Previous" onclick="previousPage()"/>
-                            <input id="first-page-button" type="button" class="paginate-button" value="1" onclick="firstPage()"/>
+                        <apex:outputPanel rendered="{!isRelocateMode}">
+                            <apex:outputPanel >
+                                <td title="{!deviceUnit.RecordType.name}">
+                                    <apex:selectList id="replacementOptions" value="{!deviceUnit.LocationId__c}" size="1">
+                                        <apex:selectOptions value="{!relocationOptions}"/>
+                                    </apex:selectList>
+                                </td>
+                            </apex:outputPanel>
+                        </apex:outputPanel>
+                    </tr>
+                </apex:repeat>
+                </tbody>
+            </table>
 
-                            <div style="display:inline-block" id="page-buttons-block"></div>
-                            <div style="display:inline-block" id="last-page-button-block"></div>
+            <br/>
 
-                            <input type="button" value="Next" class="paginate-button {!IF(devicePaginationController.hasNext,'','disabled')}" onclick="nextPage()"/>
-                        </div>
+            <apex:outputPanel rendered="{!isRelocateMode}"><button type="button" onclick="relocateCitySelected()">SAVE</button></apex:outputPanel>
 
-                    </apex:outputPanel>
-                </apex:pageBlock>
+            <div id="pagination-buttons-block">
+                <input type="button" class="paginate-button {!IF(devicePaginationController.hasPrevious,'','disabled')}" value="Previous" onclick="previousPage()"/>
+                <input id="first-page-button" type="button" class="paginate-button" value="1" onclick="firstPage()"/>
+
+                <div style="display:inline-block" id="page-buttons-block"></div>
+                <div style="display:inline-block" id="last-page-button-block"></div>
+
+                <input type="button" value="Next" class="paginate-button {!IF(devicePaginationController.hasNext,'','disabled')}" onclick="nextPage()"/>
             </div>
+
+        </apex:outputPanel>
+    </apex:pageBlock>
 
 </apex:component>

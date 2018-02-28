@@ -1,0 +1,7 @@
+<!--
+ - Created by Ar-Krav on 28.02.2018.
+ -->
+
+<apex:component id="DeviceConfigTable">
+
+</apex:component>
