@@ -3,5 +3,50 @@
  -->
 
 <apex:component id="DeviceConfigTable">
+    <apex:pageBlock title="Configurations" >
 
+        <apex:pageBlockButtons location="top">
+            <apex:outputPanel id="configuration-edit-button-block">
+                <apex:commandButton action="{!redirectToConfigurationEditorPage}" rendered="{!deviceConfigurationList != null}" value="Edit configuration"/>
+            </apex:outputPanel>
+        </apex:pageBlockButtons>
+
+        <apex:outputPanel rendered="{!deviceConfigurationList != null}">
+
+            <script>
+                if ( configTable != null ) {
+                    configTable.destroy();
+                }
+
+                configTable = redrawConfigurationDataTable();
+            </script>
+
+            <table id="configuration-table" class="display dataTable no-footer">
+                <thead>
+                <tr>
+                    <th><apex:outputText value="{!$ObjectType.Hardware__c.Fields.Name.Label}"/></th>
+                    <th><apex:outputText value="{!$ObjectType.Hardware__c.Fields.InvNo__c.Label}" /></th>
+                    <th><apex:outputText value="{!$Label.DeviceType}"/></th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <apex:repeat value="{!deviceConfigurationList}" var="hardwareUnit">
+                    <tr class="table-row">
+                        <td title="{!hardwareUnit.name}"><p class="overlapping-text"><apex:outputText value="{!hardwareUnit.name}"/></p></td>
+                        <td title="{!hardwareUnit.InvNo__c}"><p class="overlapping-text"><apex:outputText value="{!hardwareUnit.InvNo__c}"/></p></td>
+                        <td title="{!hardwareUnit.RecordType.name}"><p class="overlapping-text"><apex:outputText value="{!hardwareUnit.RecordType.name}"/></p></td>
+                    </tr>
+                </apex:repeat>
+                </tbody>
+            </table>
+
+            <br/>
+            <br/>
+
+            <img src="{!deviceImageUrl}"/>
+
+        </apex:outputPanel>
+
+    </apex:pageBlock>
 </apex:component>
