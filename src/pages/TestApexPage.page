@@ -37,11 +37,13 @@
             </apex:pageBlockButtons>
 
             <apex:outputPanel id="content-area">
-                <apex:outputPanel id="device-config-mode">
+                <!--<apex:outputPanel id="device-config-mode" rendered="false">
                     <c:DeviceWithConfigTables devicesCity="{!selectedCity}" availableCities="{!adminsCities}"/>
-                </apex:outputPanel>
+                </apex:outputPanel>-->
 
-                <!--//TODO relocation mod-->
+                <apex:outputPanel id="device-config-mode" rendered="true">
+                    <c:RelocateTAble devicesCity="{!selectedCity}" availableCities="{!adminsCities}"/>
+                </apex:outputPanel>
             </apex:outputPanel>
 
         </apex:pageBlock>
