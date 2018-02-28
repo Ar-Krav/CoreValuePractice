@@ -19,16 +19,6 @@ public with sharing class DeviceTableService {
         return ownerFilterValue.equals('') ? ownerFilterValue : ' AND AssignedToEmployee__r.name LIKE \'%' + ownerFilterValue + '%\'';
     }
 
-    public List<Hardware__c> getDeviceConfigurationHardwares(Id id){
-        List<String> allowedRecordTypes = new List<String> {'Motherboard','CPU','RAM','HDD'};
-
-        return [SELECT Name, InvNo__c, RecordType.name, Parent__c
-        FROM Hardware__c
-        WHERE Parent__c=:id
-        AND RecordType.developername IN :allowedRecordTypes
-        ORDER BY RecordType.developerName];
-    }
-
     public void updateDeviceLocation(List<Hardware__c> devices){
         update devices;
     }

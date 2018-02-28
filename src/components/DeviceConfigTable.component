@@ -2,7 +2,12 @@
  - Created by Ar-Krav on 28.02.2018.
  -->
 
-<apex:component id="DeviceConfigTable">
+<apex:component id="DeviceConfigTable" controller="DeviceConfigurationController">
+
+    <apex:attribute name="selectedDeviceId" type="String" description="Id of device witch was slected in device table" assignTo="{!deviceId}"/>
+
+    <link rel="stylesheet" type="text/css" href="{!$Resource.deviceTableStyle}"/>
+
     <apex:pageBlock title="Configurations" >
 
         <apex:pageBlockButtons location="top">
@@ -24,18 +29,18 @@
             <table id="configuration-table" class="display dataTable no-footer">
                 <thead>
                 <tr>
-                    <th><apex:outputText value="{!$ObjectType.Hardware__c.Fields.Name.Label}"/></th>
-                    <th><apex:outputText value="{!$ObjectType.Hardware__c.Fields.InvNo__c.Label}" /></th>
-                    <th><apex:outputText value="{!$Label.DeviceType}"/></th>
+                    <th class="table-col-40"><apex:outputText value="{!$ObjectType.Hardware__c.Fields.Name.Label}"/></th>
+                    <th class="table-col-30"><apex:outputText value="{!$ObjectType.Hardware__c.Fields.InvNo__c.Label}" /></th>
+                    <th class="table-col-30"><apex:outputText value="{!$Label.DeviceType}"/></th>
                 </tr>
                 </thead>
 
                 <tbody>
                 <apex:repeat value="{!deviceConfigurationList}" var="hardwareUnit">
                     <tr class="table-row">
-                        <td title="{!hardwareUnit.name}"><p class="overlapping-text"><apex:outputText value="{!hardwareUnit.name}"/></p></td>
-                        <td title="{!hardwareUnit.InvNo__c}"><p class="overlapping-text"><apex:outputText value="{!hardwareUnit.InvNo__c}"/></p></td>
-                        <td title="{!hardwareUnit.RecordType.name}"><p class="overlapping-text"><apex:outputText value="{!hardwareUnit.RecordType.name}"/></p></td>
+                        <td class="table-col-40" title="{!hardwareUnit.name}"><p class="overlapping-text"><apex:outputText value="{!hardwareUnit.name}"/></p></td>
+                        <td class="table-col-30" title="{!hardwareUnit.InvNo__c}"><p class="overlapping-text"><apex:outputText value="{!hardwareUnit.InvNo__c}"/></p></td>
+                        <td class="table-col-30" title="{!hardwareUnit.RecordType.name}"><p class="overlapping-text"><apex:outputText value="{!hardwareUnit.RecordType.name}"/></p></td>
                     </tr>
                 </apex:repeat>
                 </tbody>

@@ -49,10 +49,10 @@
                     <apex:outputPanel rendered="{!isRelocateMode == false}">
                         <div id="configuration-info">
                             <apex:pageBlock >
-                                <apex:outputText value="sdsadasdsadasdasdas"/>
+                                <apex:outputText value="Some test text in variable"/>
                             </apex:pageBlock>
 
-                            <!--<c:DeviceConfigTable/>-->
+                            <!--<c:DeviceConfigTable selectedDeviceId=""/> TODO send selected id!-->
                         </div>
                     </apex:outputPanel>
                 </div>

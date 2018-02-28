@@ -13,10 +13,7 @@
     <apex:outputText value="is relocate: {!isRelocateMode}"/>
     <br/>
     <apex:outputPanel rendered="{!isRelocateMode == false}">
-        <apex:outputPanel >
             <link rel="stylesheet" type="text/css" href="{!$Resource.deviceTableStyle}"/>
-            <apex:outputText value="is relocate v2: {!isRelocateMode}"/>
-        </apex:outputPanel>
     </apex:outputPanel>
 
 

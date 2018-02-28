@@ -139,16 +139,9 @@ public with sharing class RelocateTableController{
         devicePaginationController.setPageNumber(selectedPageNum);
     }
 
-
-    public RelocateTableController() {
-
-    }
-
     public PageReference setDeviceConfigurationListData(){
-        selectedDeviceId =  Apexpages.currentPage().getParameters().get('deviceIdParameter');
-        deviceImageUrl =  Apexpages.currentPage().getParameters().get('deviceImgUrl');
 
-        deviceConfigurationList = deviceService.getDeviceConfigurationHardwares(selectedDeviceId);
+        System.debug('SHOW CONFIG');
         return null;
     }
 
@@ -167,14 +160,5 @@ public with sharing class RelocateTableController{
     public PageReference relocateDevice(){
         deviceService.updateDeviceLocation(deviceList);
         return null;
-    }
-
-    public PageReference redirectToConfigurationEditorPage(){
-        PageReference redirector = Page.DeviceConfigurationEditor;
-        redirector.getParameters().put(ConstantsUtil.TAB_TAG_PREFIX, ConstantsUtil.DEVICES_TAB_TAG);
-        redirector.getParameters().put('deviceId',selectedDeviceId);
-        redirector.setRedirect(true);
-
-        return redirector;
     }
 }
