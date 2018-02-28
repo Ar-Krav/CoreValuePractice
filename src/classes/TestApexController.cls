@@ -3,8 +3,10 @@
  */
 
 public with sharing class TestApexController {
-    private DevicePageDataModel deviceModel = new DevicePageDataModel();
+    private TestApexModel apexModel = new TestApexModel();
     private String allCitiesLabel;
+    private Boolean isUserGlobalAdmin;
+
     public List<Location__c> adminsCities{
         get;
         set;
@@ -47,7 +49,8 @@ public with sharing class TestApexController {
 
 
     public TestApexController() {
-        adminsCities = deviceModel.getLocationUserAdmin(UserInfo.getUserId());
+        isUserGlobalAdmin = apexModel.isUSerGlobalAdmin(UserInfo.getUserId());
+        adminsCities = apexModel.getUserAdminLocations(UserInfo.getUserId(), isUserGlobalAdmin);
 
         if (adminsCities.size() > 1) {
 
@@ -67,7 +70,6 @@ public with sharing class TestApexController {
         List<SelectOption> selectionList = new List<SelectOption>();
 
         selectionList.add(new SelectOption(ConstantsUtil.allCityMode, allCitiesLabel));
-
         for (Location__c location : adminsCities) {
             selectionList.add(new SelectOption(location.id, location.name));
         }
@@ -81,6 +83,6 @@ public with sharing class TestApexController {
             adminsCitiesLabel.add(location.Name);
         }
 
-        return deviceModel.getIsGlobalAdmin() ? 'All cities' : String.join(adminsCitiesLabel, ' & ');
+        return isUserGlobalAdmin ? 'All cities' : String.join(adminsCitiesLabel, ' & ');
     }
 }
