@@ -27,7 +27,18 @@ public with sharing class DevConfigController {
         set;
     }
 
-    public String nameFilterValue{
+    public DeviceTableFilters deviceTableFilters{
+        get{
+            if (deviceTableFilters == null) {
+                deviceTableFilters = new DeviceTableFilters();
+            }
+
+            return deviceTableFilters;
+        }
+        set;
+    }
+
+    /*public String nameFilterValue{
         get {
             if (nameFilterValue == null) {
                 nameFilterValue = '';
@@ -73,7 +84,7 @@ public with sharing class DevConfigController {
         }
 
         set;
-    }
+    }*/
 
     public Id selectedDeviceId{
         get;
@@ -83,7 +94,7 @@ public with sharing class DevConfigController {
     public ApexPages.StandardSetController devicePaginationController{
         get{
             if (devicePaginationController == null) {
-                devicePaginationController = deviceModel.getDevicesStandardSetController(selectedCity);
+                devicePaginationController = deviceModel.getDevicesStandardSetController(selectedCity, deviceTableFilters);
                 System.debug('selectedCity-lazy: ' + selectedCity);
             }
 
@@ -131,20 +142,10 @@ public with sharing class DevConfigController {
 
 
     public DevConfigController() {
-        deviceModel.setFilterFields(nameFilterValue, ownerFilterValue, seriaFilterValue, typeFilterValue);
+        //deviceModel.setFilterFields(nameFilterValue, ownerFilterValue, seriaFilterValue, typeFilterValue);
         deviceModel.getLocationUserAdmin(UserInfo.getUserId());
 
         System.debug('selectedCity-const: ' + selectedCity);
-    }
-
-    public PageReference sortDeviceByLocation(){
-        devicePaginationController = deviceModel.getDevicesStandardSetController(selectedCity);
-
-        return null;
-    }
-
-    public List<Hardware__c> getHardwares(){
-        return (List<Hardware__c>) devicePaginationController.getRecords();
     }
 
     public PageReference setDeviceConfigurationListData(){
@@ -162,8 +163,8 @@ public with sharing class DevConfigController {
 
     public PageReference setFilteredDeviceData(){
         deviceConfigurationList = null;
-        deviceModel.setFilterFields(nameFilterValue, ownerFilterValue, seriaFilterValue, typeFilterValue);
-        devicePaginationController = deviceModel.getDevicesStandardSetController(selectedCity);
+        //deviceModel.setFilterFields(nameFilterValue, ownerFilterValue, seriaFilterValue, typeFilterValue);
+        devicePaginationController = deviceModel.getDevicesStandardSetController(selectedCity, deviceTableFilters);
 
         return null;
     }

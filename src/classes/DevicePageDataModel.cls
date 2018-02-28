@@ -38,32 +38,50 @@ public with sharing class DevicePageDataModel {
         ORDER BY RecordType.developerName];
     }
 
-    private String getOwnerFilterQuery(){
+    private String getOwnerFilterQuery(String ownerFilterValue){
         return ownerFilterValue.equals('') ? ownerFilterValue : ' AND AssignedToEmployee__r.name LIKE \'%' + ownerFilterValue + '%\'';
     }
 
-    private ApexPages.StandardSetController getDevicesFromAllLocations(List<Location__c> locations){
-        String query = 'SELECT imageUrl__c, Name, AssignedToEmployee__r.name, InvNo__c, RecordType.name, LocationID__c'+
+    private ApexPages.StandardSetController getDevicesFromAllLocations(List<Location__c> locations, DeviceTableFilters filters){
+        /*String query = 'SELECT imageUrl__c, Name, AssignedToEmployee__r.name, InvNo__c, RecordType.name, LocationID__c'+
                 ' FROM Hardware__c'+
                 ' WHERE Parent__c=null'+
                 ' AND LocationID__c IN :locations' +
                 ' AND name LIKE \'%' + nameFilterValue + '%\'' + getOwnerFilterQuery() +
                 ' AND InvNo__c LIKE \'%' + seriaFilterValue + '%\''+
                 ' AND RecordType.developerName LIKE \'%' + typeFilterValue + '%\''+
+                ' ORDER BY Name';*/
+
+        String query = 'SELECT imageUrl__c, Name, AssignedToEmployee__r.name, InvNo__c, RecordType.name, LocationID__c'+
+                ' FROM Hardware__c'+
+                ' WHERE Parent__c=null'+
+                ' AND LocationID__c IN :locations' +
+                ' AND name LIKE \'%' + filters.nameFilterValue + '%\'' + getOwnerFilterQuery(filters.ownerFilterValue) +
+                ' AND InvNo__c LIKE \'%' + filters.seriaFilterValue + '%\''+
+                ' AND RecordType.developerName LIKE \'%' + filters.typeFilterValue + '%\''+
                 ' ORDER BY Name';
         ApexPages.StandardSetController cont = new ApexPages.StandardSetController(database.getQueryLocator(query));
         return cont;
     }
 
-    private ApexPages.StandardSetController getDevicesByLocation(Id location){
+    private ApexPages.StandardSetController getDevicesByLocation(Id location, DeviceTableFilters filters){
 
-        String query = 'SELECT imageUrl__c, Name, AssignedToEmployee__r.name, InvNo__c, RecordType.name, LocationID__c'+
+        /*String query = 'SELECT imageUrl__c, Name, AssignedToEmployee__r.name, InvNo__c, RecordType.name, LocationID__c'+
                 ' FROM Hardware__c'+
                 ' WHERE Parent__c=null AND LocationID__c=\'' + location + '\'' +
                 ' AND name LIKE \'%' + nameFilterValue + '%\'' +
                 getOwnerFilterQuery() +
                 ' AND InvNo__c LIKE \'%' + seriaFilterValue + '%\''+
                 ' AND RecordType.developerName LIKE \'%' + typeFilterValue + '%\''+
+                ' ORDER BY Name';*/
+
+        String query = 'SELECT imageUrl__c, Name, AssignedToEmployee__r.name, InvNo__c, RecordType.name, LocationID__c'+
+                ' FROM Hardware__c'+
+                ' WHERE Parent__c=null AND LocationID__c=\'' + location + '\'' +
+                ' AND name LIKE \'%' + filters.nameFilterValue + '%\'' +
+                getOwnerFilterQuery(filters.ownerFilterValue) +
+                ' AND InvNo__c LIKE \'%' + filters.seriaFilterValue + '%\''+
+                ' AND RecordType.developerName LIKE \'%' + filters.typeFilterValue + '%\''+
                 ' ORDER BY Name';
 
         return new ApexPages.StandardSetController(database.getQueryLocator(query));
@@ -73,10 +91,10 @@ public with sharing class DevicePageDataModel {
         return [SELECT name FROM Location__c];
     }
 
-    public ApexPages.StandardSetController getDevicesStandardSetController(String location){
+    public ApexPages.StandardSetController getDevicesStandardSetController(String location, DeviceTableFilters filters){
         System.debug('deviceModel: ' + location);
 
-        return location.equals('all-cities') ? getDevicesFromAllLocations(allOfficeLocation) : getDevicesByLocation(Id.valueOf(location));
+        return location.equals('all-cities') ? getDevicesFromAllLocations(allOfficeLocation, filters) : getDevicesByLocation(Id.valueOf(location), filters);
     }
 
     public List<HArdware__c> getStockHardware(String recordType, List<Id> selectedHardwaresIds, Hardware__c device){
@@ -107,6 +125,9 @@ public with sharing class DevicePageDataModel {
     }
 
     private List<UserPermissions__c> getSigndUpUserPermissions(Id id){
+
+        System.debug('USER ID: ' + id);
+
         return [SELECT Location__c FROM UserPermissions__c WHERE User__c = :id];
     }
 

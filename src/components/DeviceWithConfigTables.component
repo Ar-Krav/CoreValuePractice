@@ -17,10 +17,10 @@
                 <apex:actionFunction name="alertMonitorChanging" rerender="configuration-info-block,configuration-edit-button-block" action="{!alertMonitorChanging}" onComplete="alert('Only devices can be changed!');"/>
 
                 <apex:actionFunction action="{!setFilteredDeviceData}" name="searchWithFilter" rerender="device-list,configuration-info-block,configuration-edit-button-block" status="deviceListReadyStatus">
-                    <apex:param name="deviceNameFilter" value="" assignTo="{!nameFilterValue}"/>
-                    <apex:param name="deviceOwnerFilter" value="" assignTo="{!ownerFilterValue}"/>
-                    <apex:param name="deviceSeriaFilter" value="" assignTo="{!seriaFilterValue}"/>
-                    <apex:param name="deviceTypeFilter" value="" assignTo="{!typeFilterValue}"/>
+                    <apex:param name="deviceNameFilter" value="" assignTo="{!deviceTableFilters.nameFilterValue}"/>
+                    <apex:param name="deviceOwnerFilter" value="" assignTo="{!deviceTableFilters.ownerFilterValue}"/>
+                    <apex:param name="deviceSeriaFilter" value="" assignTo="{!deviceTableFilters.seriaFilterValue}"/>
+                    <apex:param name="deviceTypeFilter" value="" assignTo="{!deviceTableFilters.typeFilterValue}"/>
                 </apex:actionFunction>
 
                 <apex:actionFunction name="previousPage" action="{!previous}" reRender="device-list,configuration-info-block"/>
@@ -57,10 +57,10 @@
 
                         <tfoot>
                         <tr class="filters">
-                            <th class="table-col-30"><input class="filter-field" type="text" id="device-name-filter" value="{!nameFilterValue}" placeholder="{!$ObjectType.Hardware__c.Fields.Name.Label}" onkeypress="doDeviceFiltration(event)" /></th>
-                            <th class="table-col-30"><input class="filter-field" type="text" id="device-owner-filter" value="{!ownerFilterValue}" placeholder="{!$ObjectType.Hardware__c.Fields.AssignedToEmployee__c.Label}" onkeypress="doDeviceFiltration(event)" /></th>
-                            <th class="table-col-25"><input class="filter-field" type="text" id="device-seria-filter" value="{!seriaFilterValue}" placeholder="{!$ObjectType.Hardware__c.Fields.InvNo__c.Label}" onkeypress="doDeviceFiltration(event)" /></th>
-                            <th class="table-col-20"><input class="filter-field" type="text" id="device-type-filter" value="{!typeFilterValue}" placeholder="{!$Label.DeviceType}" onkeypress="doDeviceFiltration(event)" /></th>
+                            <th class="table-col-30"><input class="filter-field" type="text" id="device-name-filter" value="{!deviceTableFilters.nameFilterValue}" placeholder="{!$ObjectType.Hardware__c.Fields.Name.Label}" onkeypress="doDeviceFiltration(event)" /></th>
+                            <th class="table-col-30"><input class="filter-field" type="text" id="device-owner-filter" value="{!deviceTableFilters.ownerFilterValue}" placeholder="{!$ObjectType.Hardware__c.Fields.AssignedToEmployee__c.Label}" onkeypress="doDeviceFiltration(event)" /></th>
+                            <th class="table-col-25"><input class="filter-field" type="text" id="device-seria-filter" value="{!deviceTableFilters.seriaFilterValue}" placeholder="{!$ObjectType.Hardware__c.Fields.InvNo__c.Label}" onkeypress="doDeviceFiltration(event)" /></th>
+                            <th class="table-col-20"><input class="filter-field" type="text" id="device-type-filter" value="{!deviceTableFilters.typeFilterValue}" placeholder="{!$Label.DeviceType}" onkeypress="doDeviceFiltration(event)" /></th>
                         </tr>
                         </tfoot>
 
