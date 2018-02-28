@@ -3,7 +3,45 @@
  */
 
 public with sharing class DevConfigController {
-    private DevicePageDataModel deviceModel = new DevicePageDataModel();
+    private DeviceTableService deviceService = new DeviceTableService();
+
+    private List<Location__c> userAdminsLocations{
+        get{
+            if (userAdminsLocations == null) {
+                userAdminsLocations = new List<Location__c>();
+                for(Location__c location : userAdminLocationsArray){
+                    userAdminsLocations.add(location);
+                }
+            }
+
+            userAdminsLocations = new List<Location__c>();
+            for(Location__c location : userAdminLocationsArray){
+                userAdminsLocations.add(location);
+            }
+
+            if (selectedCity.equals(ConstantsUtil.allCityMode)) {
+                return userAdminsLocations;
+            }
+
+            List<Location__c> tempLocList = new List<Location__c>();
+            for (Location__c location : userAdminsLocations) {
+                if (location.Id.equals(selectedCity)) {
+                    tempLocList.add(location);
+                    break;
+                }
+            }
+
+            return tempLocList;
+        }
+        set;
+    }
+
+    public Location__c[] userAdminLocationsArray{
+        get;
+        set;
+    }
+
+    private String lastCity;
 
     public String selectedCity{
         get;
@@ -38,54 +76,6 @@ public with sharing class DevConfigController {
         set;
     }
 
-    /*public String nameFilterValue{
-        get {
-            if (nameFilterValue == null) {
-                nameFilterValue = '';
-            }
-
-            return nameFilterValue;
-        }
-
-        set;
-    }
-
-    public String ownerFilterValue{
-        get {
-            if (ownerFilterValue == null) {
-                ownerFilterValue = '';
-            }
-
-            return ownerFilterValue;
-        }
-
-        set;
-    }
-
-    public String seriaFilterValue{
-        get {
-            if (seriaFilterValue == null) {
-                seriaFilterValue = '';
-            }
-
-            return seriaFilterValue;
-        }
-
-        set;
-    }
-
-    public String typeFilterValue{
-        get {
-            if (typeFilterValue == null) {
-                typeFilterValue = '';
-            }
-
-            return typeFilterValue;
-        }
-
-        set;
-    }*/
-
     public Id selectedDeviceId{
         get;
         set;
@@ -93,14 +83,12 @@ public with sharing class DevConfigController {
 
     public ApexPages.StandardSetController devicePaginationController{
         get{
-            if (devicePaginationController == null) {
-                devicePaginationController = deviceModel.getDevicesStandardSetController(selectedCity, deviceTableFilters);
-                System.debug('selectedCity-lazy: ' + selectedCity);
+            if (selectedCity != lastCity) {
+                devicePaginationController = deviceService.getDevicesStandardSetController(userAdminsLocations, deviceTableFilters);
+                devicePaginationController.setPageSize(ConstantsUtil.itemsOnOnePaginationPage);
+                lastCity = selectedCity;
             }
 
-            System.debug('selectedCity-out: ' + selectedCity);
-
-            devicePaginationController.setPageSize(ConstantsUtil.itemsOnOnePaginationPage);
             return devicePaginationController;
         }
         set;
@@ -142,17 +130,13 @@ public with sharing class DevConfigController {
 
 
     public DevConfigController() {
-        //deviceModel.setFilterFields(nameFilterValue, ownerFilterValue, seriaFilterValue, typeFilterValue);
-        deviceModel.getLocationUserAdmin(UserInfo.getUserId());
-
-        System.debug('selectedCity-const: ' + selectedCity);
     }
 
     public PageReference setDeviceConfigurationListData(){
         selectedDeviceId =  Apexpages.currentPage().getParameters().get('deviceIdParameter');
         deviceImageUrl =  Apexpages.currentPage().getParameters().get('deviceImgUrl');
 
-        deviceConfigurationList = deviceModel.getListHardwaresOfDevice(selectedDeviceId);
+        deviceConfigurationList = deviceService.getDeviceConfigurationHardwares(selectedDeviceId);
         return null;
     }
 
@@ -163,8 +147,7 @@ public with sharing class DevConfigController {
 
     public PageReference setFilteredDeviceData(){
         deviceConfigurationList = null;
-        //deviceModel.setFilterFields(nameFilterValue, ownerFilterValue, seriaFilterValue, typeFilterValue);
-        devicePaginationController = deviceModel.getDevicesStandardSetController(selectedCity, deviceTableFilters);
+        devicePaginationController = deviceService.getDevicesStandardSetController(userAdminsLocations, deviceTableFilters);
 
         return null;
     }

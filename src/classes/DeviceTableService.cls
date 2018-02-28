@@ -17,7 +17,7 @@ public with sharing class DeviceTableService {
         }
     }
 
-    public ApexPages.StandardSetController getDevicesStandardSetController(List<Location__c> location, DeviceTableFilters filters){
+    public ApexPages.StandardSetController getDevicesStandardSetController(List<Location__c> locations, DeviceTableFilters filters){
         String query = 'SELECT imageUrl__c, Name, AssignedToEmployee__r.name, InvNo__c, RecordType.name, LocationID__c'+
                 ' FROM Hardware__c'+
                 ' WHERE Parent__c=null'+
@@ -31,5 +31,15 @@ public with sharing class DeviceTableService {
 
     private String getOwnerFilterQuery(String ownerFilterValue){
         return ownerFilterValue.equals('') ? ownerFilterValue : ' AND AssignedToEmployee__r.name LIKE \'%' + ownerFilterValue + '%\'';
+    }
+
+    public List<Hardware__c> getDeviceConfigurationHardwares(Id id){
+        List<String> allowedRecordTypes = new List<String> {'Motherboard','CPU','RAM','HDD'};
+
+        return [SELECT Name, InvNo__c, RecordType.name, Parent__c
+        FROM Hardware__c
+        WHERE Parent__c=:id
+        AND RecordType.developername IN :allowedRecordTypes
+        ORDER BY RecordType.developerName];
     }
 }

@@ -5,7 +5,10 @@
 public with sharing class TestApexController {
     private DevicePageDataModel deviceModel = new DevicePageDataModel();
     private String allCitiesLabel;
-    private List<Location__c> adminsCities;
+    public List<Location__c> adminsCities{
+        get;
+        set;
+    }
 
 
     public String selectedCity{

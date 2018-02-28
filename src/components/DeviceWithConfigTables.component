@@ -4,6 +4,10 @@
 
 <apex:component id="DeviceWithConfigTables" controller="DevConfigController">
     <apex:attribute name="devicesCity" description="devices will be shown from city with this ID" type="String" required="true" assignTo="{!selectedCity}"/>
+    <apex:attribute name="availableCities" description="devices will be shown from city with this ID" type="Location__c[]" required="true" assignTo="{!userAdminLocationsArray}"/>
+
+    <apex:outputText value="!!!CITIES!!!: {!availableCities}"></apex:outputText>
+    <apex:outputText value="!!!CITIES!!!: {!userAdminLocationsArray}"></apex:outputText>
 
     <div id="main-box">
         <div id="device-block">

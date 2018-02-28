@@ -38,7 +38,7 @@
 
             <apex:outputPanel id="content-area">
                 <apex:outputPanel id="device-config-mode">
-                    <c:DeviceWithConfigTables devicesCity="{!selectedCity}"/>
+                    <c:DeviceWithConfigTables devicesCity="{!selectedCity}" availableCities="{!adminsCities}"/>
                 </apex:outputPanel>
 
                 <!--//TODO relocation mod-->
