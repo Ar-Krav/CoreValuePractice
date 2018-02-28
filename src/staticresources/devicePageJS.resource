@@ -36,6 +36,7 @@ function doDeviceFiltration(e){
             }
         }
 
+
         function selectRow(recordType, deviceId, deviceImgUrl) {
 
             var availableToChangeHardware = ['PC', 'Notebook', 'Server'];

@@ -4,54 +4,59 @@
 
 <apex:component id="DeviceConfigTable" controller="DeviceConfigurationController">
 
-    <apex:attribute name="selectedDeviceId" type="String" description="Id of device witch was slected in device table" assignTo="{!deviceId}"/>
+    <!--<apex:attribute name="selectedDeviceId" type="String" description="Id of device witch was slected in device table" assignTo="{!deviceId}"/>-->
 
     <link rel="stylesheet" type="text/css" href="{!$Resource.deviceTableStyle}"/>
 
-    <apex:pageBlock title="Configurations" >
+        <apex:pageBlock title="Configurations" >
 
-        <apex:pageBlockButtons location="top">
-            <apex:outputPanel id="configuration-edit-button-block">
-                <apex:commandButton action="{!redirectToConfigurationEditorPage}" rendered="{!deviceConfigurationList != null}" value="Edit configuration"/>
-            </apex:outputPanel>
-        </apex:pageBlockButtons>
+            <apex:pageBlockButtons location="top">
+                <apex:outputPanel id="configuration-edit-button-block">
+                    <apex:commandButton action="{!redirectToConfigurationEditorPage}" rendered="{!deviceConfigurationList != null}" value="Edit configuration"/>
+                </apex:outputPanel>
+            </apex:pageBlockButtons>
 
-        <apex:outputPanel rendered="{!deviceConfigurationList != null}">
+            <apex:actionFunction action="{!setDeviceConfigurationListData}" name="showDeviceHardwareData" rerender="configuration-area" status="configurationReadyStatus">
+                <apex:param name="deviceIdParameter" value="" />
+                <apex:param name="deviceImgUrl" value="" assignTo="{!deviceImageUrl}"/>
+            </apex:actionFunction>
 
-            <script>
-                if ( configTable != null ) {
-                    configTable.destroy();
-                }
+            <apex:outputPanel rendered="{!deviceConfigurationList != null}">
 
-                configTable = redrawConfigurationDataTable();
-            </script>
+                <script>
+                    if ( configTable != null ) {
+                        configTable.destroy();
+                    }
 
-            <table id="configuration-table" class="display dataTable no-footer">
-                <thead>
-                <tr>
-                    <th class="table-col-40"><apex:outputText value="{!$ObjectType.Hardware__c.Fields.Name.Label}"/></th>
-                    <th class="table-col-30"><apex:outputText value="{!$ObjectType.Hardware__c.Fields.InvNo__c.Label}" /></th>
-                    <th class="table-col-30"><apex:outputText value="{!$Label.DeviceType}"/></th>
-                </tr>
-                </thead>
+                    configTable = redrawConfigurationDataTable();
+                </script>
 
-                <tbody>
-                <apex:repeat value="{!deviceConfigurationList}" var="hardwareUnit">
-                    <tr class="table-row">
-                        <td class="table-col-40" title="{!hardwareUnit.name}"><p class="overlapping-text"><apex:outputText value="{!hardwareUnit.name}"/></p></td>
-                        <td class="table-col-30" title="{!hardwareUnit.InvNo__c}"><p class="overlapping-text"><apex:outputText value="{!hardwareUnit.InvNo__c}"/></p></td>
-                        <td class="table-col-30" title="{!hardwareUnit.RecordType.name}"><p class="overlapping-text"><apex:outputText value="{!hardwareUnit.RecordType.name}"/></p></td>
+                <table id="configuration-table" class="display dataTable no-footer">
+                    <thead>
+                    <tr>
+                        <th class="table-col-40"><apex:outputText value="{!$ObjectType.Hardware__c.Fields.Name.Label}"/></th>
+                        <th class="table-col-30"><apex:outputText value="{!$ObjectType.Hardware__c.Fields.InvNo__c.Label}" /></th>
+                        <th class="table-col-30"><apex:outputText value="{!$Label.DeviceType}"/></th>
                     </tr>
-                </apex:repeat>
-                </tbody>
-            </table>
+                    </thead>
 
-            <br/>
-            <br/>
+                    <tbody>
+                    <apex:repeat value="{!deviceConfigurationList}" var="hardwareUnit">
+                        <tr class="table-row">
+                            <td class="table-col-40" title="{!hardwareUnit.name}"><p class="overlapping-text"><apex:outputText value="{!hardwareUnit.name}"/></p></td>
+                            <td class="table-col-30" title="{!hardwareUnit.InvNo__c}"><p class="overlapping-text"><apex:outputText value="{!hardwareUnit.InvNo__c}"/></p></td>
+                            <td class="table-col-30" title="{!hardwareUnit.RecordType.name}"><p class="overlapping-text"><apex:outputText value="{!hardwareUnit.RecordType.name}"/></p></td>
+                        </tr>
+                    </apex:repeat>
+                    </tbody>
+                </table>
 
-            <img src="{!deviceImageUrl}"/>
+                <br/>
+                <br/>
 
-        </apex:outputPanel>
+                <img src="{!deviceImageUrl}"/>
 
-    </apex:pageBlock>
+            </apex:outputPanel>
+
+        </apex:pageBlock>
 </apex:component>

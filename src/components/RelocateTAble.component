@@ -9,20 +9,12 @@
     <apex:attribute name="isRelocateMode" description="some desc" type="Boolean" required="true"/>
 
 
-    <br/>
-    <apex:outputText value="is relocate: {!isRelocateMode}"/>
-    <br/>
     <apex:outputPanel rendered="{!isRelocateMode == false}">
             <link rel="stylesheet" type="text/css" href="{!$Resource.deviceTableStyle}"/>
     </apex:outputPanel>
 
 
     <apex:pageBlock title="Assemblies">
-
-        <apex:actionFunction action="{!setDeviceConfigurationListData}" name="showDeviceHardwareData" rerender="configuration-info-block,configuration-edit-button-block" status="configurationReadyStatus">
-            <apex:param name="deviceIdParameter" value="" />
-            <apex:param name="deviceImgUrl" value="" assignTo="{!deviceImageUrl}"/>
-        </apex:actionFunction>
 
         <apex:actionFunction name="alertMonitorChanging" rerender="configuration-info-block,configuration-edit-button-block" action="{!alertMonitorChanging}" onComplete="alert('Only devices can be changed!');"/>
 

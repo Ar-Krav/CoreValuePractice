@@ -139,11 +139,13 @@ public with sharing class RelocateTableController{
         devicePaginationController.setPageNumber(selectedPageNum);
     }
 
-    public PageReference setDeviceConfigurationListData(){
+    /*public PageReference setDeviceConfigurationListData(){
+        selectedDeviceId =  Apexpages.currentPage().getParameters().get('deviceIdParameter');
+        deviceImageUrl =  Apexpages.currentPage().getParameters().get('deviceImgUrl');
 
-        System.debug('SHOW CONFIG');
+        deviceConfigurationList = deviceService.getDeviceConfigurationHardwares(selectedDeviceId);
         return null;
-    }
+    }*/
 
     public PageReference alertMonitorChanging(){
         deviceConfigurationList = null;

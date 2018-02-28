@@ -16,11 +16,18 @@ public with sharing class DeviceConfigurationController {
     }
 
     public List<Hardware__c> deviceConfigurationList{
-        get{
-            deviceConfigurationList = devConfService.getDeviceConfigurationHardwares(deviceId);
-            return deviceConfigurationList;
-        }
+        get;
         set;
+    }
+
+    public PageReference setDeviceConfigurationListData(){
+        deviceId =  Apexpages.currentPage().getParameters().get('deviceIdParameter');
+        deviceImageUrl =  Apexpages.currentPage().getParameters().get('deviceImgUrl');
+
+        System.debug('deviceId: ' + deviceId);
+
+        deviceConfigurationList = devConfService.getDeviceConfigurationHardwares(deviceId);
+        return null;
     }
 
     public PageReference redirectToConfigurationEditorPage(){
