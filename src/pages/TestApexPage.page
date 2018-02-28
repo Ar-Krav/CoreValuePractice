@@ -2,47 +2,49 @@
  - Created by Ar-Krav on 24.01.2018.
  -->
 
-<apex:page controller="DevicePageController" standardStylesheets="false">
+<apex:page controller="TestApexController" standardStylesheets="false">
 
-    <apex:toolbar id="theToolbar">
-        <apex:outputText value="Sample Toolbar"/>
-        <apex:toolbarGroup itemSeparator="line" id="toobarGroupLinks">
-            <apex:outputLink value="http://www.salesforce.com">salesforce</apex:outputLink>
-            <apex:outputLink value="http://developer.salesforce.com">apex developer network</apex:outputLink>
-        </apex:toolbarGroup>
-        <apex:toolbarGroup itemSeparator="line" location="right" id="toobarGroupForm">
-            <apex:form id="theForm">
-                <apex:inputText id="theInputText">Enter Text</apex:inputText>
-                <apex:commandLink value="search" id="theCommandLink"/>
-            </apex:form>
-        </apex:toolbarGroup>
-    </apex:toolbar>
+    <head>
+        <apex:includescript value="https://code.jquery.com/jquery-1.12.4.js"/>
+        <link rel="stylesheet" type="text/css"
+              href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"/>
 
-    <apex:pageBlock >
-        <p>asdasdsadlasd,asldmaslkdasdashkdbashdbh</p>
-        <p>asdasdsadlasd,asldmaslkdasdashkdbashdbh</p>
-        <p>asdasdsadlasd,asldmaslkdasdashkdbashdbh</p>
-        <p>asdasdsadlasd,asldmaslkdasdashkdbashdbh</p>
-        <p>asdasdsadlasd,asldmaslkdasdashkdbashdbh</p>
-        <p>asdasdsadlasd,asldmaslkdasdashkdbashdbh</p>
-        <p>asdasdsadlasd,asldmaslkdasdashkdbashdbh</p>
-        <p>asdasdsadlasd,asldmaslkdasdashkdbashdbh</p>
-        <p>asdasdsadlasd,asldmaslkdasdashkdbashdbh</p>
-        <p>asdasdsadlasd,asldmaslkdasdashkdbashdbh</p>
-        <p>asdasdsadlasd,asldmaslkdasdashkdbashdbh</p>
-        <p>asdasdsadlasd,asldmaslkdasdashkdbashdbh</p>
-        <p>asdasdsadlasd,asldmaslkdasdashkdbashdbh</p>
-        <p>asdasdsadlasd,asldmaslkdasdashkdbashdbh</p>
-        <p>asdasdsadlasd,asldmaslkdasdashkdbashdbh</p>
-        <p>asdasdsadlasd,asldmaslkdasdashkdbashdbh</p>
-        <p>asdasdsadlasd,asldmaslkdasdashkdbashdbh</p>
-        <p>asdasdsadlasd,asldmaslkdasdashkdbashdbh</p>
-        <p>asdasdsadlasd,asldmaslkdasdashkdbashdbh</p>
-        <p>asdasdsadlasd,asldmaslkdasdashkdbashdbh</p>
-        <p>asdasdsadlasd,asldmaslkdasdashkdbashdbh</p>
-        <p>asdasdsadlasd,asldmaslkdasdashkdbashdbh</p>
-        <p>asdasdsadlasd,asldmaslkdasdashkdbashdbh</p>
-        <p>asdasdsadlasd,asldmaslkdasdashkdbashdbh</p>
-        <p>asdasdsadlasd,asldmaslkdasdashkdbashdbh</p>
-    </apex:pageBlock>
+        <link rel="stylesheet" type="text/css"
+              href="https://cdn.datatables.net/select/1.2.5/css/select.dataTables.min.css"/>
+
+        <script type="text/javascript" charset="utf8"
+                src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+
+        <script type="text/javascript" charset="utf8"
+                src="https://cdn.datatables.net/select/1.2.5/js/dataTables.select.min.js"></script>
+
+
+        <apex:includeScript value="{!$Resource.devicePageJS}"/>
+        <link rel="stylesheet" type="text/css" href="{!$Resource.devicePageStyle}"/>
+    </head>
+
+    <apex:form id="page-main-form">
+        <apex:pageBlock title="Devices of {!selectedCitiesLabel}">
+
+            <apex:pageBlockButtons location="top">
+                <apex:actionFunction name="changeLocation" rerender="page-main-form"/>
+
+                <apex:outputPanel id="city-selection-block" rendered="{!isShowLocationSelection}">
+                    <apex:selectList style="color: #000;font-size: 1.1em;" id="officeLocationsDropDown" value="{!selectedCity}" onchange="changeLocation()" size="1">
+                        <apex:selectOptions value="{!adminCitiesOption}"/>
+                    </apex:selectList>
+                </apex:outputPanel>
+            </apex:pageBlockButtons>
+
+            <apex:outputPanel id="content-area">
+                <apex:outputPanel id="device-config-mode">
+                    <c:DeviceWithConfigTables devicesCity="{!selectedCity}"/>
+                </apex:outputPanel>
+
+                <!--//TODO relocation mod-->
+            </apex:outputPanel>
+
+        </apex:pageBlock>
+    </apex:form>
+
 </apex:page>

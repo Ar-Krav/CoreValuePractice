@@ -2,10 +2,10 @@
     text-align: right;
 }
 
-#device-block, #configuration-info{
+/*#device-block, #configuration-info{
             width:49%;
             display:inline-block;
-        }
+        }*/
 
         #main-box{
             display: flex;

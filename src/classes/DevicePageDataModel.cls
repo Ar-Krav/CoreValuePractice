@@ -7,6 +7,15 @@ public with sharing class DevicePageDataModel {
     private String nameFilterValue, seriaFilterValue, typeFilterValue, ownerFilterValue;
     private List<Location__c> allOfficeLocation;
     private Boolean isGlobalAdmin;
+    private List<Location__c> allCities;
+
+    public DevicePageDataModel(){
+        allCities = getLocations();
+    }
+
+    public List<Location__c> getAllCities(){
+        return allCities;
+    }
 
     public Boolean getIsGlobalAdmin(){
         return isGlobalAdmin;
@@ -34,8 +43,7 @@ public with sharing class DevicePageDataModel {
     }
 
     private ApexPages.StandardSetController getDevicesFromAllLocations(List<Location__c> locations){
-
-        String query = 'SELECT imageUrl__c, Name, AssignedToEmployee__r.name, InvNo__c, RecordType.name'+
+        String query = 'SELECT imageUrl__c, Name, AssignedToEmployee__r.name, InvNo__c, RecordType.name, LocationID__c'+
                 ' FROM Hardware__c'+
                 ' WHERE Parent__c=null'+
                 ' AND LocationID__c IN :locations' +
@@ -43,14 +51,13 @@ public with sharing class DevicePageDataModel {
                 ' AND InvNo__c LIKE \'%' + seriaFilterValue + '%\''+
                 ' AND RecordType.developerName LIKE \'%' + typeFilterValue + '%\''+
                 ' ORDER BY Name';
-
-
-        return new ApexPages.StandardSetController(database.getQueryLocator(query));
+        ApexPages.StandardSetController cont = new ApexPages.StandardSetController(database.getQueryLocator(query));
+        return cont;
     }
 
     private ApexPages.StandardSetController getDevicesByLocation(Id location){
 
-        String query = 'SELECT imageUrl__c, Name, AssignedToEmployee__r.name, InvNo__c, RecordType.name'+
+        String query = 'SELECT imageUrl__c, Name, AssignedToEmployee__r.name, InvNo__c, RecordType.name, LocationID__c'+
                 ' FROM Hardware__c'+
                 ' WHERE Parent__c=null AND LocationID__c=\'' + location + '\'' +
                 ' AND name LIKE \'%' + nameFilterValue + '%\'' +
@@ -67,6 +74,8 @@ public with sharing class DevicePageDataModel {
     }
 
     public ApexPages.StandardSetController getDevicesStandardSetController(String location){
+        System.debug('deviceModel: ' + location);
+
         return location.equals('all-cities') ? getDevicesFromAllLocations(allOfficeLocation) : getDevicesByLocation(Id.valueOf(location));
     }
 
@@ -104,19 +113,18 @@ public with sharing class DevicePageDataModel {
     public List<Location__c> getLocationUserAdmin(Id id){
         List<UserPermissions__c> userPermissionsLocations = getSigndUpUserPermissions(id);
         isGlobalAdmin = userPermissionsLocations.get(0).Location__c == null;
-        List<Location__c> allLocations = getLocations();
 
 
         List<Location__c> userLocationAdmin = new List<Location__c>();
 
         if (isGlobalAdmin) {
-            userLocationAdmin = allLocations;
+            userLocationAdmin = allCities;
         }
         else {
             for (Integer i = 0; i < userPermissionsLocations.size(); i++) {
                 Id locationId = userPermissionsLocations.get(i).Location__c;
 
-                for (Location__c location : allLocations) {
+                for (Location__c location : allCities) {
                     if (location.Id.equals(locationId)) {
                         userLocationAdmin.add(location);
                     }
@@ -210,5 +218,20 @@ public with sharing class DevicePageDataModel {
         }
 
         update newConfList;
+    }
+
+    public void updateDeviceLocation(Hardware__c device, Id newLocation){
+        device.LocationID__c = newLocation;
+        update device;
+    }
+
+    public List<SelectOption> getRelocationSelectedOptions(){
+        List<SelectOption> selectionList = new List<SelectOption>();
+
+        for (Location__c location : allCities) {
+            selectionList.add(new SelectOption(location.id, location.name));
+        }
+
+        return selectionList;
     }
 }
