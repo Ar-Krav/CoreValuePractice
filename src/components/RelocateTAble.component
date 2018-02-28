@@ -12,8 +12,9 @@
     <br/>
     <apex:outputText value="is relocate: {!isRelocateMode}"/>
     <br/>
-    <apex:outputPanel rendered="{!isRelocateMode}">
+    <apex:outputPanel rendered="{!isRelocateMode == false}">
         <apex:outputPanel >
+            <link rel="stylesheet" type="text/css" href="{!$Resource.deviceTableStyle}"/>
             <apex:outputText value="is relocate v2: {!isRelocateMode}"/>
         </apex:outputPanel>
     </apex:outputPanel>
@@ -62,20 +63,20 @@
             <table id="devices-table" class="display" cellspacing="0">
                 <thead>
                 <tr>
-                    <th><apex:outputText value="{!$ObjectType.Hardware__c.Fields.Name.Label}"/></th>
-                    <th><apex:outputText value="{!$ObjectType.Hardware__c.Fields.AssignedToEmployee__c.Label}"/></th>
-                    <th><apex:outputText value="{!$ObjectType.Hardware__c.Fields.InvNo__c.Label}" /></th>
-                    <th><apex:outputText value="{!$Label.DeviceType}"/></th>
+                    <th class="table-col-30"><apex:outputText value="{!$ObjectType.Hardware__c.Fields.Name.Label}"/></th>
+                    <th class="table-col-30"><apex:outputText value="{!$ObjectType.Hardware__c.Fields.AssignedToEmployee__c.Label}"/></th>
+                    <th class="table-col-25"><apex:outputText value="{!$ObjectType.Hardware__c.Fields.InvNo__c.Label}" /></th>
+                    <th class="table-col-20"><apex:outputText value="{!$Label.DeviceType}"/></th>
                     <apex:outputPanel rendered="{!isRelocateMode}"><th></th></apex:outputPanel>
                 </tr>
                 </thead>
 
                 <tfoot>
                 <tr class="filters">
-                    <th><input class="filter-field" type="text" id="device-name-filter" value="{!deviceTableFilters.nameFilterValue}" placeholder="{!$ObjectType.Hardware__c.Fields.Name.Label}" onkeypress="doDeviceFiltration(event)" /></th>
-                    <th><input class="filter-field" type="text" id="device-owner-filter" value="{!deviceTableFilters.ownerFilterValue}" placeholder="{!$ObjectType.Hardware__c.Fields.AssignedToEmployee__c.Label}" onkeypress="doDeviceFiltration(event)" /></th>
-                    <th><input class="filter-field" type="text" id="device-seria-filter" value="{!deviceTableFilters.seriaFilterValue}" placeholder="{!$ObjectType.Hardware__c.Fields.InvNo__c.Label}" onkeypress="doDeviceFiltration(event)" /></th>
-                    <th><input class="filter-field" type="text" id="device-type-filter" value="{!deviceTableFilters.typeFilterValue}" placeholder="{!$Label.DeviceType}" onkeypress="doDeviceFiltration(event)" /></th>
+                    <th class="table-col-30"><input class="filter-field" type="text" id="device-name-filter" value="{!deviceTableFilters.nameFilterValue}" placeholder="{!$ObjectType.Hardware__c.Fields.Name.Label}" onkeypress="doDeviceFiltration(event)" /></th>
+                    <th class="table-col-30"><input class="filter-field" type="text" id="device-owner-filter" value="{!deviceTableFilters.ownerFilterValue}" placeholder="{!$ObjectType.Hardware__c.Fields.AssignedToEmployee__c.Label}" onkeypress="doDeviceFiltration(event)" /></th>
+                    <th class="table-col-25"><input class="filter-field" type="text" id="device-seria-filter" value="{!deviceTableFilters.seriaFilterValue}" placeholder="{!$ObjectType.Hardware__c.Fields.InvNo__c.Label}" onkeypress="doDeviceFiltration(event)" /></th>
+                    <th class="table-col-20"><input class="filter-field" type="text" id="device-type-filter" value="{!deviceTableFilters.typeFilterValue}" placeholder="{!$Label.DeviceType}" onkeypress="doDeviceFiltration(event)" /></th>
                     <apex:outputPanel rendered="{!isRelocateMode}"><th></th></apex:outputPanel>
                 </tr>
                 </tfoot>
@@ -83,19 +84,19 @@
                 <tbody>
                 <apex:repeat value="{!deviceList}" var="deviceUnit">
                     <tr onclick="if(!{!isRelocateMode}){selectRow('{!deviceUnit.RecordType.name}', '{!deviceUnit.id}', '{!deviceUnit.ImageUrl__c}')}">
-                        <td title="{!deviceUnit.name}">
+                        <td class="table-col-30" title="{!deviceUnit.name}">
                             <p class="overlapping-text"><apex:outputText value="{!deviceUnit.name}" /></p>
                         </td>
 
-                        <td title="{!deviceUnit.assignedToEmployee__r.name}">
+                        <td class="table-col-30" title="{!deviceUnit.assignedToEmployee__r.name}">
                             <p class="overlapping-text"><apex:outputText value="{!deviceUnit.assignedToEmployee__r.name}" /></p>
                         </td>
 
-                        <td title="{!deviceUnit.InvNo__c}">
+                        <td class="table-col-25" title="{!deviceUnit.InvNo__c}">
                             <p class="overlapping-text"><apex:outputText value="{!deviceUnit.InvNo__c}" /></p>
                         </td>
 
-                        <td title="{!deviceUnit.RecordType.name}">
+                        <td class="table-col-20" title="{!deviceUnit.RecordType.name}">
                             <p class="overlapping-text"><apex:outputText value="{!deviceUnit.RecordType.name}" /></p>
                         </td>
 

@@ -39,15 +39,24 @@
             <apex:commandButton reRender="content-area" action="{!changeMode}" value="change mode"/>
 
             <apex:outputPanel id="content-area">
-                <!--<apex:outputPanel id="device-config-mode" rendered="false">
-                    <c:DeviceWithConfigTables devicesCity="{!selectedCity}" availableCities="{!adminsCities}"/>
-                </apex:outputPanel>-->
+                <div id="main-box">
+                    <div id="device-block">
+                        <apex:outputPanel>
+                            <c:RelocateTAble devicesCity="{!selectedCity}" availableCities="{!adminsCities}" isRelocateMode="{!isRelocateMode}"/>
+                        </apex:outputPanel>
+                    </div>
 
-                <apex:outputPanel id="device-config-mode" rendered="true">
-                    <c:RelocateTAble devicesCity="{!selectedCity}" availableCities="{!adminsCities}" isRelocateMode="{!isRelocateMode}"/>
-                </apex:outputPanel>
+                    <apex:outputPanel rendered="{!isRelocateMode == false}">
+                        <div id="configuration-info">
+                            <apex:pageBlock >
+                                <apex:outputText value="sdsadasdsadasdasdas"/>
+                            </apex:pageBlock>
+
+                            <!--<c:DeviceConfigTable/>-->
+                        </div>
+                    </apex:outputPanel>
+                </div>
             </apex:outputPanel>
-
         </apex:pageBlock>
     </apex:form>
 

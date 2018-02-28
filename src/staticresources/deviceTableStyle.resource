@@ -1,16 +1,3 @@
-#device-block{
-    min-width: 634px;
-}
-
-#devices-table{
-    table-layout: fixed;
-    width: 100%;
-}
-
-#devices-table tfoot{
-    display: table-header-group;
-}
-
 .table-col-40{
     width: 40%;
 }
