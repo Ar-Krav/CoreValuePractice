@@ -88,14 +88,11 @@
 
                         <td title="{!deviceUnit.RecordType.name}">
                            <apex:outputPanel rendered="{!isRelocateMode}">
-                                   <apex:selectList id="replacementOptions" value="{!deviceUnit.LocationId__c}" size="1">
+                                   <apex:selectList id="replacementOptions" value="{!deviceUnit.LocationId__c}" size="1" onChange="relocateCitySelected()">
                                        <apex:selectOptions value="{!relocationOptions}"/>
                                    </apex:selectList>
                            </apex:outputPanel>
                         </td>
-
-
-                        <!--TODO fix the table column-->
                     </tr>
                 </apex:repeat>
                 </tbody>
@@ -103,7 +100,7 @@
 
             <br/>
 
-            <apex:outputPanel rendered="{!isRelocateMode}"><button type="button" onclick="relocateCitySelected()">SAVE</button></apex:outputPanel>
+            <!--<apex:outputPanel rendered="{!isRelocateMode}"><button type="button" onclick="relocateCitySelected()">SAVE</button></apex:outputPanel>-->
 
             <div id="pagination-buttons-block">
                 <input type="button" class="paginate-button {!IF(devicePaginationController.hasPrevious,'','disabled')}" value="Previous" onclick="previousPage()"/>
