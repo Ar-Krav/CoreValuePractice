@@ -32,4 +32,17 @@ public with sharing class DeviceTableService {
 
         return selectionList;
     }
+
+    public ApexPages.StandardSetController getDevicesForRelocate(List<Location__c> locations, DeviceTableFilters filters){
+        String query = 'SELECT imageUrl__c, Name, AssignedToEmployee__r.name, InvNo__c, RecordType.name, LocationID__c'+
+                ' FROM Hardware__c'+
+                ' WHERE Parent__c=null'+
+                ' AND AssignedToEmployee__c = null' +
+                ' AND LocationID__c IN :locations' +
+                ' AND name LIKE \'%' + filters.nameFilterValue + '%\'' + getOwnerFilterQuery(filters.ownerFilterValue) +
+                ' AND InvNo__c LIKE \'%' + filters.seriaFilterValue + '%\''+
+                ' AND RecordType.developerName LIKE \'%' + filters.typeFilterValue + '%\''+
+                ' ORDER BY Name';
+        return new ApexPages.StandardSetController(database.getQueryLocator(query));
+    }
 }

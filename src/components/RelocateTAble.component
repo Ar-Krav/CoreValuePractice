@@ -6,7 +6,9 @@
     <apex:attribute name="devicesCity" description="devices will be shown from city with this ID" type="String" required="true" assignTo="{!selectedCity}"/>
     <apex:attribute name="availableCities" description="devices will be shown from city with this ID" type="Location__c[]" required="true" assignTo="{!userAdminLocationsArray}"/>
 
-    <apex:attribute name="isRelocateMode" description="some desc" type="Boolean" required="true"/>
+    <apex:attribute name="isRelocateMode" description="some desc" type="Boolean" required="true" assignTo="{!isRelocate}"/>
+
+    <apex:outputText value="isRelocate: {!isRelocateMode}"/>
 
 
     <apex:outputPanel rendered="{!isRelocateMode == false}">
@@ -25,12 +27,12 @@
             <apex:param name="deviceTypeFilter" value="" assignTo="{!deviceTableFilters.typeFilterValue}"/>
         </apex:actionFunction>
 
-        <apex:actionFunction name="previousPage" action="{!previous}" reRender="device-list,configuration-info-block"/>
-        <apex:actionFunction name="nextPage" action="{!next}" reRender="device-list,configuration-info-block"/>
-        <apex:actionFunction name="firstPage" action="{!first}" reRender="device-list,configuration-info-block"/>
-        <apex:actionFunction name="lastPage" action="{!last}" reRender="device-list,configuration-info-block"/>
+        <apex:actionFunction name="previousPage" action="{!devicePaginationController.previous}" reRender="device-list,configuration-area"/>
+        <apex:actionFunction name="nextPage" action="{!devicePaginationController.next}" reRender="device-list,configuration-area"/>
+        <apex:actionFunction name="firstPage" action="{!devicePaginationController.first}" reRender="device-list,configuration-area"/>
+        <apex:actionFunction name="lastPage" action="{!devicePaginationController.last}" reRender="device-list,configuration-area"/>
 
-        <apex:actionFunction name="goToSelectedPageNum" action="{!goToSelectedPage}" reRender="device-list">
+        <apex:actionFunction name="goToSelectedPageNum" action="{!goToSelectedPage}" reRender="device-list,configuration-area">
             <apex:param value="" name="selectedPage"/>
         </apex:actionFunction>
 
@@ -98,6 +100,8 @@
                                 </td>
                             </apex:outputPanel>
                         </apex:outputPanel>
+
+                        <!--TODO fix the table column-->
                     </tr>
                 </apex:repeat>
                 </tbody>

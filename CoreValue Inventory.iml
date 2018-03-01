@@ -104,10 +104,6 @@
                             <option name="selected" value="true" />
                           </MetadataEntry>
                           <MetadataEntry>
-                            <option name="name" value="DevConfigController" />
-                            <option name="selected" value="true" />
-                          </MetadataEntry>
-                          <MetadataEntry>
                             <option name="name" value="TestApexController" />
                             <option name="selected" value="true" />
                           </MetadataEntry>

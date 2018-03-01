@@ -41,6 +41,13 @@ public with sharing class RelocateTableController{
         set;
     }
 
+
+    private Boolean previousMode;
+    public Boolean isRelocate{
+        get;
+        set;
+    }
+
     private String lastCity;
 
     public String selectedCity{
@@ -66,16 +73,6 @@ public with sharing class RelocateTableController{
         }
     }
 
-    public String deviceImageUrl{
-        get;
-        set;
-    }
-
-    public List<Hardware__c> deviceConfigurationList{
-        get;
-        set;
-    }
-
     public DeviceTableFilters deviceTableFilters{
         get{
             if (deviceTableFilters == null) {
@@ -87,17 +84,15 @@ public with sharing class RelocateTableController{
         set;
     }
 
-    public Id selectedDeviceId{
-        get;
-        set;
-    }
-
     public ApexPages.StandardSetController devicePaginationController{
         get{
-            if (selectedCity != lastCity) {
-                devicePaginationController = deviceService.getDevicesStandardSetController(userAdminsLocations, deviceTableFilters);
+            if (selectedCity != lastCity || isRelocate != previousMode) {
+
+                devicePaginationController = isRelocate ? deviceService.getDevicesForRelocate(userAdminsLocations, deviceTableFilters) : deviceService.getDevicesStandardSetController(userAdminsLocations, deviceTableFilters);
                 devicePaginationController.setPageSize(ConstantsUtil.itemsOnOnePaginationPage);
+
                 lastCity = selectedCity;
+                previousMode = isRelocate;
             }
 
             return devicePaginationController;
@@ -112,48 +107,18 @@ public with sharing class RelocateTableController{
         set;
     }
 
-    public void first(){
-        deviceConfigurationList = null;
-        this.devicePaginationController.first();
-    }
-
-    public void last(){
-        deviceConfigurationList = null;
-        this.devicePaginationController.last();
-    }
-
-    public void next(){
-        deviceConfigurationList = null;
-        this.devicePaginationController.next();
-    }
-
-    public void previous(){
-        deviceConfigurationList = null;
-        this.devicePaginationController.previous();
-    }
-
     public void goToSelectedPage(){
-        deviceConfigurationList = null;
-
         Integer selectedPageNum = Integer.valueOf(ApexPages.currentPage().getParameters().get('selectedPage'));
+
+        System.debug('goToSelectedPage: ' + selectedPageNum);
         devicePaginationController.setPageNumber(selectedPageNum);
     }
 
-    /*public PageReference setDeviceConfigurationListData(){
-        selectedDeviceId =  Apexpages.currentPage().getParameters().get('deviceIdParameter');
-        deviceImageUrl =  Apexpages.currentPage().getParameters().get('deviceImgUrl');
-
-        deviceConfigurationList = deviceService.getDeviceConfigurationHardwares(selectedDeviceId);
-        return null;
-    }*/
-
     public PageReference alertMonitorChanging(){
-        deviceConfigurationList = null;
         return null;
     }
 
     public PageReference setFilteredDeviceData(){
-        deviceConfigurationList = null;
         devicePaginationController = deviceService.getDevicesStandardSetController(userAdminsLocations, deviceTableFilters);
 
         return null;

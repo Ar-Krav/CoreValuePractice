@@ -41,18 +41,14 @@
             <apex:outputPanel id="content-area">
                 <div id="main-box">
                     <div id="device-block">
-                        <apex:outputPanel>
+                        <apex:outputPanel id="device-area">
                             <c:RelocateTAble devicesCity="{!selectedCity}" availableCities="{!adminsCities}" isRelocateMode="{!isRelocateMode}"/>
                         </apex:outputPanel>
                     </div>
 
-                    <apex:outputPanel rendered="{!isRelocateMode == false}">
+                    <apex:outputPanel id="configuration-area" rendered="{!isRelocateMode == false}">
                         <div id="configuration-info">
-                            <apex:pageBlock >
-                                <apex:outputText value="Some test text in variable"/>
-                            </apex:pageBlock>
-
-                            <!--<c:DeviceConfigTable selectedDeviceId=""/> TODO send selected id!-->
+                            <c:DeviceConfigTable/>
                         </div>
                     </apex:outputPanel>
                 </div>
