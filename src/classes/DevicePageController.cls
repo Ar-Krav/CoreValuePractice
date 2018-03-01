@@ -55,6 +55,7 @@ public with sharing class DevicePageController {
 
     public DevicePageController() {
         isUserGlobalAdmin = apexModel.isUSerGlobalAdmin(UserInfo.getUserId());
+
         adminsCities = apexModel.getUserAdminLocations(UserInfo.getUserId(), isUserGlobalAdmin);
 
         isRelocateMode = false;

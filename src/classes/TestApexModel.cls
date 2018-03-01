@@ -14,7 +14,7 @@ public with sharing class TestApexModel {
     }
 
     public Boolean isUSerGlobalAdmin(Id userId){
-        return getUserPermissedLocations(userId).get(0).Id == null;
+        return getUserPermissedLocations(userId).isEmpty();
     }
 
     private List<Location__c> getUserPermissedLocations(Id userId){
