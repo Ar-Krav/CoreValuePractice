@@ -36,11 +36,12 @@
                 </apex:outputPanel>
             </apex:pageBlockButtons>
 
-            <apex:commandButton reRender="content-area" action="{!changeMode}" value="change mode"/>
-            <br/>
-            <br/>
 
             <apex:outputPanel id="content-area">
+                <apex:commandButton reRender="content-area" action="{!changeMode}" value="{!IF(isRelocateMode,'View mode','Relocate mode')}"/>
+                <br/>
+                <br/>
+
                 <div id="main-box">
                     <div id="device-block">
                         <apex:outputPanel id="device-area">
