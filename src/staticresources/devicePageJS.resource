@@ -1,5 +1,8 @@
 function redrawDeviceDataTable(){
     return $('#devices-table').DataTable( {
+        "columnDefs": [
+            { "orderable": false, "targets": 'no-sort'}
+        ],
         "paging":   false,
         "info":     false,
         select: true

@@ -89,11 +89,12 @@ public with sharing class RelocateTableController{
             if (selectedCity != lastCity || isRelocate != previousMode) {
 
                 devicePaginationController = isRelocate ? deviceService.getDevicesForRelocate(userAdminsLocations, deviceTableFilters) : deviceService.getDevicesStandardSetController(userAdminsLocations, deviceTableFilters);
-                devicePaginationController.setPageSize(ConstantsUtil.itemsOnOnePaginationPage);
 
                 lastCity = selectedCity;
                 previousMode = isRelocate;
             }
+
+            devicePaginationController.setPageSize(ConstantsUtil.itemsOnOnePaginationPage);
 
             return devicePaginationController;
         }
